@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: database:3306
--- Tiempo de generación: 09-11-2023 a las 13:44:13
+-- Tiempo de generación: 10-11-2023 a las 12:37:42
 -- Versión del servidor: 8.1.0
 -- Versión de PHP: 8.2.11
 
@@ -36,7 +36,8 @@ CREATE TABLE `car` (
   `fuel` varchar(20) NOT NULL,
   `doors` int NOT NULL,
   `seats` int NOT NULL,
-  `color` varchar(20) NOT NULL
+  `color` varchar(20) NOT NULL,
+  `hp` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------

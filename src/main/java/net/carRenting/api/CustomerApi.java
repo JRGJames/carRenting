@@ -12,53 +12,51 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.carRenting.entity.RentalEntity;
-import net.carRenting.service.RentalService;
+import net.carRenting.entity.CustomerEntity;
+import net.carRenting.service.CustomerService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/rental")
-public class RentalApi {
+@RequestMapping("/customer")
+public class CustomerApi {
+
     @Autowired
-    RentalService rentalService;
+    CustomerService customerService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<RentalEntity> get(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(rentalService.get(id));
+    public ResponseEntity<CustomerEntity> get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(customerService.get(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody RentalEntity rentalEntity) {
-        return ResponseEntity.ok(rentalService.create(rentalEntity));
+    public ResponseEntity<Long> create(@RequestBody CustomerEntity customerEntity) {
+        return ResponseEntity.ok(customerService.create(customerEntity));
     }
 
     @PutMapping("")
-    public ResponseEntity<RentalEntity> update(@RequestBody RentalEntity rentalEntity) {
-        return ResponseEntity.ok(rentalService.update(rentalEntity));
+    public ResponseEntity<CustomerEntity> update(@RequestBody CustomerEntity customerEntity) {
+        return ResponseEntity.ok(customerService.update(customerEntity));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(rentalService.delete(id));
+        return ResponseEntity.ok(customerService.delete(id));
     }
 
     @GetMapping("")
-    public ResponseEntity<Page<RentalEntity>> getPage(Pageable pageable,
-            @RequestParam(value = "customerId", defaultValue = "0", required = false) Long customerId,
-            @RequestParam(value = "carId", defaultValue = "0", required = false) Long carId) {
-        return ResponseEntity.ok(rentalService.getPage(pageable, customerId, carId));
+    public ResponseEntity<Page<CustomerEntity>> getPage(Pageable pageable) {
+        return ResponseEntity.ok(customerService.getPage(pageable));
     }
 
     @PostMapping("/populate/{amount}")
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {
-        return ResponseEntity.ok(rentalService.populate(amount));
+        return ResponseEntity.ok(customerService.populate(amount));
     }
 
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(rentalService.empty());
+        return ResponseEntity.ok(customerService.empty());
     }
 }

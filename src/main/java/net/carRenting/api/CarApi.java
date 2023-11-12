@@ -1,8 +1,8 @@
 package net.carRenting.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,44 +23,43 @@ import net.carRenting.service.CarService;
 @RequestMapping("/car")
 public class CarApi {
     @Autowired
-    CarService oCarService;
+    CarService carService;
 
     @GetMapping("/{id}")
     public ResponseEntity<CarEntity> get(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(oCarService.get(id));
+        return ResponseEntity.ok(carService.get(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody CarEntity oCarEntity) {
-        return ResponseEntity.ok(oCarService.create(oCarEntity));
+    public ResponseEntity<Long> create(@RequestBody CarEntity carEntity) {
+        return ResponseEntity.ok(carService.create(carEntity));
     }
 
     @PutMapping("")
-    public ResponseEntity<CarEntity> update(@RequestBody CarEntity oCarEntity) {
-        return ResponseEntity.ok(oCarService.update(oCarEntity));
+    public ResponseEntity<CarEntity> update(@RequestBody CarEntity carEntity) {
+        return ResponseEntity.ok(carService.update(carEntity));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(oCarService.delete(id));
+        return ResponseEntity.ok(carService.delete(id));
     }
 
     @GetMapping("")
-    public ResponseEntity<Page<CarEntity>> getPage(Pageable oPageable,
-            @RequestParam(value = "user", defaultValue = "0", required = false) Long userId,
-            @RequestParam(value = "thread", defaultValue = "0", required = false) Long threadId) {
-        return ResponseEntity.ok(oCarService.getPage(oPageable, userId, threadId));
+    public ResponseEntity<Page<CarEntity>> getPage(Pageable pageable,
+            @RequestParam(value = "brand", defaultValue = "", required = false) String brand,
+            @RequestParam(value = "model", defaultValue = "", required = false) String model,
+            @RequestParam(value = "year", defaultValue = "0", required = false) Integer year) {
+        return ResponseEntity.ok(carService.getPage(pageable, brand, model, year));
     }
 
     @PostMapping("/populate/{amount}")
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {
-        return ResponseEntity.ok(oCarService.populate(amount));
+        return ResponseEntity.ok(carService.populate(amount));
     }
 
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(oCarService.empty());
+        return ResponseEntity.ok(carService.empty());
     }
 }
-
-    

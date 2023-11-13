@@ -3,21 +3,22 @@ package net.carRenting.helper;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Year;
-import java.util.Random;
 
 public class DataGenerationHelper {
 
-    private static final String[] aNames = { "Mónica", "José Antonio", "Laura", "Lucas", "Eva", "Eloy", "Jesús", "Alan",
+    //Customer
+
+    private static final String[] names = { "Mónica", "José Antonio", "Laura", "Lucas", "Eva", "Eloy", "Jesús", "Alan",
             "Pablo", "Paula", "Raquel", "Nieves", "Elena", "Sergio", "Jaime", "Fernando", "Rafael" };
 
-    private static final String[] aSurnames = {
+    private static final String[] surnames = {
             "Alcañiz", "Puig", "Ayala", "Farell", "Ferrer", "Esteve", "González", "Rozalén", "Lara", "Velarte",
             "Latorre", "Briones", "Maldonado", "Suárez", "McLure", "Alarcón", "Molero", "Marín", "Muñoz", "García",
             "Navarro", "López", "Navas", "Aguilar", "Ortega", "Fabra", "Romero", "Díaz", "Cano", "Roselló", "Gómez",
             "Serrano", "Quilez", "Aznar", "Aparici"
     };
 
-    private static final String[] aPhonePrefixes = { "600", "601", "602", "603", "604", "605", "606", "607", "608",
+    private static final String[] phonePrefixes = { "600", "601", "602", "603", "604", "605", "606", "607", "608",
             "609" };
 
     private static final String[] domains = { "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "example.com" };
@@ -35,7 +36,7 @@ public class DataGenerationHelper {
     private static final String[] countries = { "United States", "Canada", "United Kingdom", "Germany", "France",
             "Japan", "China", "India", "Brazil", "Australia" };
 
-    private static final String[] aUsernames = {
+    private static final String[] usernames = {
             "user123", "coolCoder", "gamerGirl", "javaMaster", "codingWizard",
             "dataGeek", "techExplorer", "webDevPro", "codeNinja", "byteBender",
             "codeSlinger", "javaJunkie", "devGuru", "bugHunter", "debuggerKing",
@@ -43,15 +44,15 @@ public class DataGenerationHelper {
     };
 
     public static String getRandomName() {
-        return aNames[(int) (Math.random() * aNames.length)];
+        return names[(int) (Math.random() * names.length)];
     }
 
     public static String getRandomSurname() {
-        return aSurnames[(int) (Math.random() * aSurnames.length)];
+        return surnames[(int) (Math.random() * surnames.length)];
     }
 
     public static String getRandomPhoneNumber() {
-        return aPhonePrefixes[(int) (Math.random() * aPhonePrefixes.length)] + generateRandomNumericString(7);
+        return phonePrefixes[(int) (Math.random() * phonePrefixes.length)] + generateRandomNumericString(7);
     }
 
     public static String getRandomEmail() {
@@ -84,7 +85,7 @@ public class DataGenerationHelper {
     }
 
     public static String getRandomUsername() {
-        return aUsernames[(int) (Math.random() * aUsernames.length)];
+        return usernames[(int) (Math.random() * usernames.length)];
     }
 
     private static String generateRandomNumericString(int length) {
@@ -95,15 +96,7 @@ public class DataGenerationHelper {
         return sb.toString();
     }
 
-    public static String doNormalizeString(String cadena) {
-        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇ";
-        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcC";
-        String cadenaSinAcentos = cadena;
-        for (int i = 0; i < original.length(); i++) {
-            cadenaSinAcentos = cadenaSinAcentos.replace(original.charAt(i), ascii.charAt(i));
-        }
-        return cadenaSinAcentos;
-    }
+    //Car
 
     private static final String[] carBrands = { "Toyota", "Ford", "Honda", "Chevrolet", "Volkswagen", "Nissan", "Hyundai", "BMW", "Mercedes-Benz", "Audi" };
     private static final String[] carModels = { "Camry", "Fusion", "Civic", "Malibu", "Jetta", "Altima", "Elantra", "X5", "E-Class", "A4" };
@@ -149,4 +142,31 @@ public class DataGenerationHelper {
     public static int getRandomHorsePower() {
         return 40 + (int) (Math.random() * (1200 - 40 + 1));
     }
+
+    //Rental
+
+    private static final String[] locations = { "Airport", "Downtown", "Suburb", "Train Station", "Hotel" };
+
+    public static Date getRandomPickupDate() {
+        int daysToAdd = (int) (Math.random() * 14); // Para una fecha aleatoria en los próximos 14 días
+        return Date.valueOf(LocalDate.now().plusDays(daysToAdd));
+    }
+
+    public static Date getRandomDropoffDate(Date pickupDate) {
+        int daysToAdd = 1 + (int) (Math.random() * 30); // Para una fecha aleatoria entre 1 y 14 días después de la fecha de recogida
+        return Date.valueOf(pickupDate.toLocalDate().plusDays(daysToAdd));
+    }
+
+    public static String getRandomPickupLocation() {
+        return locations[(int) (Math.random() * locations.length)];
+    }
+
+    public static String getRandomDropoffLocation() {
+        return locations[(int) (Math.random() * locations.length)];
+    }
+
+    public static float getRandomCost() {
+        return 50 + (float) (Math.random() * 450); // Para un costo aleatorio entre 50 y 500
+    }
+
 }

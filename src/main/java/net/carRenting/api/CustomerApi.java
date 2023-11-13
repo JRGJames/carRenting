@@ -30,6 +30,11 @@ public class CustomerApi {
         return ResponseEntity.ok(customerService.get(id));
     }
 
+    @GetMapping("/byUsername/{username}")
+    public ResponseEntity<CustomerEntity> get(@PathVariable("username") String username) {
+        return ResponseEntity.ok(customerService.getByUsername(username));
+    }
+
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody CustomerEntity customerEntity) {
         return ResponseEntity.ok(customerService.create(customerEntity));
@@ -58,5 +63,10 @@ public class CustomerApi {
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(customerService.empty());
+    }
+
+    @GetMapping("/byCarsNumberDesc")
+    public ResponseEntity<Page<CustomerEntity>> getPageByCarsNumberDesc(Pageable pageable) {
+        return ResponseEntity.ok(customerService.getPageByCarsNumberDesc(pageable));
     }
 }

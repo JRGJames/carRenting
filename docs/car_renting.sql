@@ -7,6 +7,11 @@
 -- Versión del servidor: 8.1.0
 -- Versión de PHP: 8.2.11
 
+CREATE DATABASE IF NOT EXISTS car_renting;
+
+-- Volver a seleccionar la base de datos
+USE car_renting;
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";

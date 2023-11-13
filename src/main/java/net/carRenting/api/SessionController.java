@@ -17,11 +17,11 @@ import net.carRenting.service.SessionService;
 public class SessionController {
 
     @Autowired
-    SessionService oSessionService;
+    SessionService sessionService;
 
     @PostMapping()
-    public ResponseEntity<String> login(@RequestBody CustomerBean oCostumerBean) {
-        return ResponseEntity.ok("\"" + oSessionService.login(oCostumerBean) + "\"");
+    public ResponseEntity<String> login(@RequestBody CustomerBean customerBean) {
+        return ResponseEntity.ok("\"" + sessionService.login(customerBean) + "\"");
     }
 
 }

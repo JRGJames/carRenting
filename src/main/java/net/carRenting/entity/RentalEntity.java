@@ -49,14 +49,24 @@ public class RentalEntity {
     @JoinColumn(name = "id_car", insertable = false, updatable = false)
     private CarEntity car;
 
-    public RentalEntity() {
+    public RentalEntity(Long id, java.sql.Date pickupDate, java.sql.Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
+        this.id = id;
+        this.pickupDate = pickupDate;
+        this.dropoffDate = dropoffDate;
+        this.pickupLocation = pickupLocation;
+        this.dropoffLocation = dropoffLocation;
+        this.cost = cost;
     }
 
-    // Constructor con todos los campos
-    public RentalEntity(Long id, Long idCustomer, Long idCar, java.sql.Date pickupDate, java.sql.Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost, CustomerEntity customer, CarEntity car) {
-        this.id = id;
-        this.idCustomer = idCustomer;
-        this.idCar = idCar;
+    public RentalEntity(java.sql.Date pickupDate, java.sql.Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
+        this.pickupDate = pickupDate;
+        this.dropoffDate = dropoffDate;
+        this.pickupLocation = pickupLocation;
+        this.dropoffLocation = dropoffLocation;
+        this.cost = cost;
+    }
+
+    public RentalEntity(java.sql.Date pickupDate, java.sql.Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost, CustomerEntity customer, CarEntity car) {
         this.pickupDate = pickupDate;
         this.dropoffDate = dropoffDate;
         this.pickupLocation = pickupLocation;
@@ -74,22 +84,6 @@ public class RentalEntity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getIdCustomer() {
-        return idCustomer;
-    }
-
-    public void setIdCustomer(Long idCustomer) {
-        this.idCustomer = idCustomer;
-    }
-
-    public Long getIdCar() {
-        return idCar;
-    }
-
-    public void setIdCar(Long idCar) {
-        this.idCar = idCar;
     }
 
     public java.sql.Date getPickupDate() {

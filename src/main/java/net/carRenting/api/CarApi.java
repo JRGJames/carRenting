@@ -47,10 +47,9 @@ public class CarApi {
 
     @GetMapping("")
     public ResponseEntity<Page<CarEntity>> getPage(Pageable pageable,
-            @RequestParam(value = "brand", defaultValue = "", required = false) String brand,
-            @RequestParam(value = "model", defaultValue = "", required = false) String model,
-            @RequestParam(value = "year", defaultValue = "0", required = false) Integer year) {
-        return ResponseEntity.ok(carService.getPage(pageable, brand, model, year));
+            @RequestParam(value = "customer", defaultValue = "0", required = false) Long customerId,
+            @RequestParam(value = "rental", defaultValue = "0", required = false) Long rentalId) {
+        return ResponseEntity.ok(carService.getPage(pageable, customerId, rentalId));
     }
 
     @PostMapping("/populate/{amount}")

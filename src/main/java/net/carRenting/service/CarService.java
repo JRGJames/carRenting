@@ -1,12 +1,13 @@
 package net.carRenting.service;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.servlet.http.HttpServletRequest;
 import net.carRenting.entity.CarEntity;
 import net.carRenting.exception.ResourceNotFoundException;
 import net.carRenting.helper.DataGenerationHelper;
@@ -23,19 +24,22 @@ public class CarService {
     CustomerRepository customerRepository;
 
     @Autowired
-    CustomerRepository customerService;
-
-    @Autowired
-    SessionService sessionService;
+    HttpServletRequest httpServletRequest;
 
     @Autowired
     RentalService rentalService;
+
+    @Autowired
+    CustomerService customerService;
+
+    @Autowired
+    SessionService sessionService;
 
     public CarEntity get(Long id) {
         return carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Car not found"));
     }
 
-    public Page<CarEntity> getPage(org.springframework.data.domain.Pageable pageable, Long customerId, Long rentalId) {
+    public Page<CarEntity> getPage(Pageable pageable, Long customerId, Long rentalId) {
         if (customerId == 0) {
             if (rentalId == 0) {
                 return carRepository.findAll(pageable);
@@ -74,6 +78,12 @@ public class CarService {
         sessionService.onlyAdminsOrCustomersWithIisOwnData(carEntityFromDatabase.getCustomer().getId());
         carRepository.deleteById(id);
         return id;
+    }
+
+    public CarEntity getOneRandom() {
+        sessionService.onlyAdmins();
+        Pageable pageable = PageRequest.of((int) (Math.random() * carRepository.count()), 1);
+        return carRepository.findAll(pageable).getContent().get(0);
     }
 
     @Transactional

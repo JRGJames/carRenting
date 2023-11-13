@@ -47,9 +47,8 @@ public class RentalApi {
 
     @GetMapping("")
     public ResponseEntity<Page<RentalEntity>> getPage(Pageable pageable,
-            @RequestParam(value = "customerId", defaultValue = "0", required = false) Long customerId,
-            @RequestParam(value = "carId", defaultValue = "0", required = false) Long carId) {
-        return ResponseEntity.ok(rentalService.getPage(pageable, customerId, carId));
+    @RequestParam(value = "customer", defaultValue = "0", required = false) Long customerId) {
+        return ResponseEntity.ok(rentalService.getPage(pageable, customerId));
     }
 
     @PostMapping("/populate/{amount}")
@@ -60,5 +59,11 @@ public class RentalApi {
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(rentalService.empty());
+    }
+
+    @GetMapping("/byCarsNumberDesc")
+    public ResponseEntity<Page<RentalEntity>> getPageByCarsNumberDesc(Pageable pageable,
+            @RequestParam(value = "customer", defaultValue = "0", required = false) Long customerId) {
+        return ResponseEntity.ok(rentalService.getPageByCarsNumberDesc(pageable, customerId));
     }
 }

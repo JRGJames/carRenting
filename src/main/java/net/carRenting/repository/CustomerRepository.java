@@ -1,6 +1,9 @@
 package net.carRenting.repository;
 
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,9 +15,10 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
 
     Optional<CustomerEntity> findByUsernameAndPassword(String username, String password);
 
+    @Query(value = "SELECT u.*,count(r.id) FROM customer u, car r WHERE u.id = r.id_customer GROUP BY u.id ORDER BY COUNT(u.id) desc", nativeQuery = true)
+    Page<CustomerEntity> findCustomersByCarsNumberDescFilter(Pageable pageable);
+
     @Modifying
     @Query(value = "ALTER TABLE customer AUTO_INCREMENT = 1", nativeQuery = true)
     void resetAutoIncrement();
-
-    CustomerEntity getOneRandom();
 }

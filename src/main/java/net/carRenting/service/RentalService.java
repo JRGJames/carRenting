@@ -1,5 +1,7 @@
 package net.carRenting.service;
 
+import java.sql.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,95 +18,103 @@ import net.carRenting.repository.CustomerRepository;
 @Service
 public class RentalService {
     @Autowired
-    RentalRepository oRentalRepository;
+    RentalRepository rentalRepository;
 
     @Autowired
-    HttpServletRequest oHttpServletRequest;
+    HttpServletRequest httpServletRequest;
 
     @Autowired
-    CustomerRepository oCustomerRepository;
+    CustomerRepository customerRepository;
 
     @Autowired
-    CustomerService oCustomerService;
+    CustomerService customerService;
 
     @Autowired
-    SessionService oSessionService;
+    CarService carService;
+
+    @Autowired
+    SessionService sessionService;
 
     public RentalEntity get(Long id) {
-        return oRentalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
+        return rentalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
     }
 
-    public Page<RentalEntity> getPage(Pageable oPageable, Long customerId) {
+    public Page<RentalEntity> getPage(Pageable pageable, Long customerId) {
         if (customerId == 0) {
-            return oRentalRepository.findAll(oPageable);
+            return rentalRepository.findAll(pageable);
         } else {
-            return oRentalRepository.findByCustomerId(customerId, oPageable);
+            return rentalRepository.findByCustomerId(customerId, pageable);
         }
     }
 
-    public Page<RentalEntity> getPageByRentalsNumberDesc(Pageable oPageable, Long customerId) {
+    public Page<RentalEntity> getPageByCarsNumberDesc(Pageable pageable, Long customerId) {
         if (customerId == 0) {
-            return oRentalRepository.findRentalsByCarsNumberDesc(oPageable);
+            return rentalRepository.findRentalsByCarsNumberDesc(pageable);
         } else {
-            return oRentalRepository.findRentalsByCarsNumberDescFilterByCustomerId(customerId, oPageable);
+            return rentalRepository.findRentalsByCarsNumberDescFilterByCustomerId(customerId, pageable);
         }
     }
 
 
-    public Long create(RentalEntity oRentalEntity) {
-        oRentalEntity.setId(null);
-        oSessionService.onlyAdminsOrCustomers();
-        if (oSessionService.isCustomer()) {
-            oRentalEntity.setCustomer(oSessionService.getSessionCustomer());
-            return oRentalRepository.save(oRentalEntity).getId();
+    public Long create(RentalEntity rentalEntity) {
+        rentalEntity.setId(null);
+        sessionService.onlyAdminsOrCustomers();
+        if (sessionService.isCustomer()) {
+            rentalEntity.setCustomer(sessionService.getSessionCustomer());
+            return rentalRepository.save(rentalEntity).getId();
         } else {
-            return oRentalRepository.save(oRentalEntity).getId();
+            return rentalRepository.save(rentalEntity).getId();
         }
     }
 
-    public RentalEntity update(RentalEntity oRentalEntityToSet) {
-        RentalEntity oRentalEntityFromDatabase = this.get(oRentalEntityToSet.getId());
-        oSessionService.onlyAdminsOrCustomersWithIisOwnData(oRentalEntityFromDatabase.getCustomer().getId());
-        if (oSessionService.isCustomer()) {
-            if (oRentalEntityToSet.getCustomer().getId().equals(oSessionService.getSessionCustomer().getId())) {
-                return oRentalRepository.save(oRentalEntityToSet);
+    public RentalEntity update(RentalEntity rentalEntityToSet) {
+        RentalEntity rentalEntityFromDatabase = this.get(rentalEntityToSet.getId());
+        sessionService.onlyAdminsOrCustomersWithIisOwnData(rentalEntityFromDatabase.getCustomer().getId());
+        if (sessionService.isCustomer()) {
+            if (rentalEntityToSet.getCustomer().getId().equals(sessionService.getSessionCustomer().getId())) {
+                return rentalRepository.save(rentalEntityToSet);
             } else {
                 throw new ResourceNotFoundException("Unauthorized");
             }
         } else {
-            return oRentalRepository.save(oRentalEntityToSet);
+            return rentalRepository.save(rentalEntityToSet);
         }
     }
 
     public Long delete(Long id) {
-        RentalEntity oRentalEntityFromDatabase = this.get(id);
-        oSessionService.onlyAdminsOrCustomersWithIisOwnData(oRentalEntityFromDatabase.getCustomer().getId());
-        oRentalRepository.deleteById(id);
+        RentalEntity rentalEntityFromDatabase = this.get(id);
+        sessionService.onlyAdminsOrCustomersWithIisOwnData(rentalEntityFromDatabase.getCustomer().getId());
+        rentalRepository.deleteById(id);
         return id;
     }
 
     public Long populate(Integer amount) {
-        oSessionService.onlyAdmins();
+        sessionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {
-            oRentalRepository
-                    .save(new RentalEntity(DataGenerationHelper.getSpeech(1), oCustomerService.getOneRandom()));
+            Date pickupDate = DataGenerationHelper.getRandomPickupDate();
+            Date dropoffDate = DataGenerationHelper.getRandomDropoffDate(pickupDate);
+            String pickupLocation = DataGenerationHelper.getRandomPickupLocation();
+            String dropoffLocation = DataGenerationHelper.getRandomDropoffLocation();
+            Float cost = DataGenerationHelper.getRandomCost();
+            rentalRepository
+                    .save(new RentalEntity(pickupDate, dropoffDate, pickupLocation, dropoffLocation, cost, customerService.getOneRandom(), carService.getOneRandom()));
         }
-        return oRentalRepository.count();
+        return rentalRepository.count();
     }
 
-    public RentalEntity getOneRandom() {oRentalRepository
-        oSessionService.onlyAdmins();
-        Pageable oPageable = PageRequest.of((int) (Math.random() * oRentalRepository.count()), 1);
-        return oRentalRepository.findAll(oPageable).getContent().get(0);
+    public RentalEntity getOneRandom() {
+        sessionService.onlyAdmins();
+        Pageable pageable = PageRequest.of((int) (Math.random() * rentalRepository.count()), 1);
+        return rentalRepository.findAll(pageable).getContent().get(0);
     }
 
     @Transactional
     public Long empty() {
-        oSessionService.onlyAdmins();
-        oRentalRepository.deleteAll();
-        oRentalRepository.resetAutoIncrement();
-        oRentalRepository.flush();
-        return oRentalRepository.count();
+        sessionService.onlyAdmins();
+        rentalRepository.deleteAll();
+        rentalRepository.resetAutoIncrement();
+        rentalRepository.flush();
+        return rentalRepository.count();
     }
 
 }

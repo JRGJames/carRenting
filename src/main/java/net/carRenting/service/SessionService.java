@@ -13,20 +13,20 @@ import net.carRenting.repository.CustomerRepository;
 public class SessionService {
 
     @Autowired
-    CustomerRepository oCustomerRepository;
+    CustomerRepository customerRepository;
 
     @Autowired
-    HttpServletRequest oHttpServletRequest;
+    HttpServletRequest httpServletRequest;
 
-    public String login(CustomerBean oCustomerBean) {
-        oCustomerRepository.findByUsernameAndPassword(oCustomerBean.getUsername(), oCustomerBean.getPassword())
+    public String login(CustomerBean customerBean) {
+        customerRepository.findByUsernameAndPassword(customerBean.getUsername(), customerBean.getPassword())
                 .orElseThrow(() -> new ResourceNotFoundException("Wrong Customer or password"));
-        return JWTHelper.generateJWT(oCustomerBean.getUsername());
+        return JWTHelper.generateJWT(customerBean.getUsername());
     }
 
     public String getSessionUsername() {        
-        if (oHttpServletRequest.getAttribute("username") instanceof String) {
-            return oHttpServletRequest.getAttribute("username").toString();
+        if (httpServletRequest.getAttribute("username") instanceof String) {
+            return httpServletRequest.getAttribute("username").toString();
         } else {
             return null;
         }
@@ -34,7 +34,7 @@ public class SessionService {
 
     public CustomerEntity getSessionCustomer() {
         if (this.getSessionUsername() != null) {
-            return oCustomerRepository.findByUsername(this.getSessionUsername()).orElse(null);    
+            return customerRepository.findByUsername(this.getSessionUsername()).orElse(null);    
         } else {
             return null;
         }
@@ -42,7 +42,7 @@ public class SessionService {
 
     public Boolean isSessionActive() {
         if (this.getSessionUsername() != null) {
-            return oCustomerRepository.findByUsername(this.getSessionUsername()).isPresent();
+            return customerRepository.findByUsername(this.getSessionUsername()).isPresent();
         } else {
             return false;
         }
@@ -50,9 +50,9 @@ public class SessionService {
 
     public Boolean isAdmin() {
         if (this.getSessionUsername() != null) {
-            CustomerEntity oCustomerEntityInSession = oCustomerRepository.findByUsername(this.getSessionUsername())
+            CustomerEntity customerEntityInSession = customerRepository.findByUsername(this.getSessionUsername())
                     .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-            return Boolean.FALSE.equals(oCustomerEntityInSession.getRole());
+            return Boolean.FALSE.equals(customerEntityInSession.getRole());
         } else {
             return false;
         }
@@ -60,9 +60,9 @@ public class SessionService {
 
     public Boolean isCustomer() {
         if (this.getSessionUsername() != null) {
-            CustomerEntity oCustomerEntityInSession = oCustomerRepository.findByUsername(this.getSessionUsername())
+            CustomerEntity customerEntityInSession = customerRepository.findByUsername(this.getSessionUsername())
                     .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-            return Boolean.TRUE.equals(oCustomerEntityInSession.getRole());
+            return Boolean.TRUE.equals(customerEntityInSession.getRole());
         } else {
             return false;
         }
@@ -95,19 +95,19 @@ public class SessionService {
         }
     }
 
-    public void onlyAdminsOrCustomersWithIisOwnData(Long id_user) {
+    public void onlyAdminsOrCustomersWithIisOwnData(Long id_custumer) {
         if (this.isSessionActive()) {
             if (!this.isAdmin()) {
                 if (!this.isCustomer()) {
                     throw new UnauthorizedException("Only admins or customers can do this");
                 } else {
-                    if (!this.getSessionCustomer().getId().equals(id_user)) {
+                    if (!this.getSessionCustomer().getId().equals(id_custumer)) {
                         throw new UnauthorizedException("Only admins or costumers with its own data can do this");
                     }
                 }
             }
         } else {
-            throw new UnauthorizedException("Only admins or users can do this");
+            throw new UnauthorizedException("Only admins or customers can do this");
         }
     }
 

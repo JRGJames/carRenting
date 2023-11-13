@@ -1,6 +1,7 @@
 package net.carRenting.service;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -19,54 +20,75 @@ import net.carRenting.repository.RentalRepository;
 @Service
 public class CustomerService {
 
-    @Autowired
-    CustomerRepository oCustomerRepository;
+    private final String carrentingPASSWORD = "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e";
+
+    String memberSinceString = "2012-04-23";
+    Date memberSince = Date.valueOf(memberSinceString);
+    
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     @Autowired
-    RentalRepository oRentalRepository;
+    CustomerRepository customerRepository;
 
     @Autowired
-    SessionService oSessionService;
+    RentalRepository rentalRepository;
 
     @Autowired
-    HttpServletRequest oHttpServletRequest;
+    SessionService sessionService;
+
+    @Autowired
+    HttpServletRequest httpServletRequest;
 
     public CustomerEntity get(Long id) {
-        return oCustomerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        return customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
     }
 
-    public Page<CustomerEntity> getPage(org.springframework.data.domain.Pageable oPageable) {
-        return oCustomerRepository.findAll(oPageable);
+    public CustomerEntity getByUsername(String username) {
+        return customerRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found by username"));
     }
 
-    public Long create(CustomerEntity oCustomerEntity) {
-        oCustomerEntity.setId(null);
-        return oCustomerRepository.save(oCustomerEntity).getId();
+    public Page<CustomerEntity> getPage(org.springframework.data.domain.Pageable pageable) {
+        sessionService.onlyAdmins();
+        return customerRepository.findAll(pageable);
     }
 
-    public CustomerEntity update(CustomerEntity oCustomerEntityToSet) {
+    public Page<CustomerEntity> getPageByCarsNumberDesc(Pageable pageable) {
+        return customerRepository.findCustomersByCarsNumberDescFilter(pageable);
+    }
 
-        //Añadir logica
+    public Long create(CustomerEntity customerEntity) {
+        sessionService.onlyAdmins();
+        customerEntity.setId(null);
+        customerEntity.setPassword(carrentingPASSWORD);
+        return customerRepository.save(customerEntity).getId();
+    }
 
-
-        CustomerEntity oCustomerEntityFromDatabase = this.get(oCustomerEntityToSet.getId());
-        // Aquí puedes agregar la lógica de actualización según tus requisitos.
-        // Por ejemplo, copiar los campos del objeto recibido al objeto existente.
-        oCustomerEntityFromDatabase.setFirstName(oCustomerEntityToSet.getFirstName());
-        oCustomerEntityFromDatabase.setLastName(oCustomerEntityToSet.getLastName());
-        // ... (haz lo mismo para los demás campos)
-        return oCustomerRepository.save(oCustomerEntityFromDatabase);
+    public CustomerEntity update(CustomerEntity customerEntityToSet) {
+        CustomerEntity customerEntityFromDatabase = this.get(customerEntityToSet.getId());
+        sessionService.onlyAdminsOrCustomersWithIisOwnData(customerEntityFromDatabase.getId());
+        if (sessionService.isCustomer()) {
+            customerEntityToSet.setId(null);
+            customerEntityToSet.setRole(customerEntityFromDatabase.getRole());
+            customerEntityToSet.setPassword(carrentingPASSWORD);
+            return customerRepository.save(customerEntityToSet);
+        } else {
+            customerEntityToSet.setId(null);
+            customerEntityToSet.setPassword(carrentingPASSWORD);
+            return customerRepository.save(customerEntityToSet);
+        }
     }
 
     public Long delete(Long id) {
-        oCustomerRepository.deleteById(id);
+        sessionService.onlyAdmins();
+        customerRepository.deleteById(id);
         return id;
     }
 
     public CustomerEntity getOneRandom() {
-        oSessionService.onlyAdmins();
-        Pageable oPageable = PageRequest.of((int) (Math.random() * oCustomerRepository.count()), 1);
-        return oCustomerRepository.findAll(oPageable).getContent().get(0);
+        sessionService.onlyAdmins();
+        Pageable pageable = PageRequest.of((int) (Math.random() * customerRepository.count()), 1);
+        return customerRepository.findAll(pageable).getContent().get(0);
     }
 
     public Long populate(Integer amount) {
@@ -82,19 +104,22 @@ public class CustomerService {
             String country = DataGenerationHelper.getRandomCountry();
             Date memberSince = DataGenerationHelper.getCurrentSqlDate();
             String username = DataGenerationHelper.getRandomUsername();
-            oCustomerRepository.save(new CustomerEntity(name, surname, phoneNumber, email, address, city, province, postalCode, country, memberSince, username, "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true ));
+            customerRepository.save(new CustomerEntity(name, surname, phoneNumber, email, address, city, province,
+                    postalCode, country, memberSince, username,
+                    "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true));
         }
-        return oCustomerRepository.count();
+        return customerRepository.count();
     }
 
     @Transactional
     public Long empty() {
-
-        //Añadir lógica
-
-
-        oCustomerRepository.deleteAll();
-        // Puedes agregar lógica adicional aquí según tus requisitos.
-        return oCustomerRepository.count();
+        sessionService.onlyAdmins();
+        customerRepository.deleteAll();
+        customerRepository.resetAutoIncrement();
+        CustomerEntity customerEntity1 = new CustomerEntity("Carlos", "Sainz", "55555555", "cs@gmail.com", "C/Carlos Sainz", "Madrid", "Madrid", "43055", "Spain", memberSince, "carlossainz55", "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true );
+        customerRepository.save(customerEntity1);
+        customerEntity1 = new CustomerEntity("Fernando", "Alonso", "333333333", "fa@gmail.com", "C/Fernando Alonso", "Asturias", "Oviedo", "43033", "Spain", memberSince , "fernandoalo_oficial", "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true );
+        customerRepository.save(customerEntity1);
+        return customerRepository.count();
     }
 }

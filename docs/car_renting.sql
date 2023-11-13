@@ -3,14 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: database:3306
--- Tiempo de generación: 10-11-2023 a las 12:37:42
+-- Tiempo de generación: 13-11-2023 a las 10:54:07
 -- Versión del servidor: 8.1.0
 -- Versión de PHP: 8.2.11
-
-CREATE DATABASE IF NOT EXISTS car_renting;
-
-USE car_renting;
-
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -64,7 +59,8 @@ CREATE TABLE `customer` (
   `country` varchar(50) NOT NULL,
   `member_since` date NOT NULL,
   `username` varchar(50) NOT NULL,
-  `password` varchar(512) NOT NULL
+  `password` varchar(512) NOT NULL,
+  `role` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------

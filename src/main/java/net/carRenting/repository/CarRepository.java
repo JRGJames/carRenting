@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import net.carRenting.entity.CarEntity;
 
 public interface CarRepository extends JpaRepository<CarEntity, Long> {
-    Page<CarEntity> findByCostumerId(Long id, Pageable pageable);
+    Page<CarEntity> findByCustomerId(Long id, Pageable pageable);
 
     Page<CarEntity> findByRentalId(Long id, Pageable pageable);
 

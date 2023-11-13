@@ -15,4 +15,6 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
     @Modifying
     @Query(value = "ALTER TABLE customer AUTO_INCREMENT = 1", nativeQuery = true)
     void resetAutoIncrement();
+
+    CustomerEntity getOneRandom();
 }

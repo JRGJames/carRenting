@@ -1,19 +1,110 @@
 package net.carRenting.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import jakarta.servlet.http.HttpServletRequest;
+import net.carRenting.entity.RentalEntity;
+import net.carRenting.exception.ResourceNotFoundException;
+import net.carRenting.helper.DataGenerationHelper;
+import net.carRenting.repository.RentalRepository;
+import net.carRenting.repository.CustomerRepository;
 
-public class RentalService extends JpaRepository<RentalEntity, Long> {
-    Page<RentalEntity> findByCostumerId(Long id, Pageable pageable);
+@Service
+public class RentalService {
+    @Autowired
+    RentalRepository oRentalRepository;
 
-    @Query(value = "SELECT t.*,count(r.id) FROM rental t, car r WHERE t.id = r.id_rental GROUP BY t.id ORDER BY COUNT(r.id) desc", nativeQuery = true)
-    Page<RentalEntity> findRentalsByCarsNumberDesc(Pageable pageable);
+    @Autowired
+    HttpServletRequest oHttpServletRequest;
 
-    @Query(value = "SELECT t.*,count(r.id) FROM rental t, car r WHERE t.id = r.id_rental and t.id_costumer=$1 GROUP BY t.id ORDER BY COUNT(r.id) desc", nativeQuery = true)
-    Page<RentalEntity> findRentalsByCarNumberDescFilterByCostumerId(Long costumerId, Pageable pageable);
+    @Autowired
+    CustomerRepository oCustomerRepository;
 
-    @Modifying
-    @Query(value = "ALTER TABLE thread AUTO_INCREMENT = 1", nativeQuery = true)
-    void resetAutoIncrement();
+    @Autowired
+    CustomerService oCustomerService;
+
+    @Autowired
+    SessionService oSessionService;
+
+    public RentalEntity get(Long id) {
+        return oRentalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
+    }
+
+    public Page<RentalEntity> getPage(Pageable oPageable, Long customerId) {
+        if (customerId == 0) {
+            return oRentalRepository.findAll(oPageable);
+        } else {
+            return oRentalRepository.findByCustomerId(customerId, oPageable);
+        }
+    }
+
+    public Page<RentalEntity> getPageByRentalsNumberDesc(Pageable oPageable, Long customerId) {
+        if (customerId == 0) {
+            return oRentalRepository.findRentalsByCarsNumberDesc(oPageable);
+        } else {
+            return oRentalRepository.findRentalsByCarsNumberDescFilterByCustomerId(customerId, oPageable);
+        }
+    }
+
+
+    public Long create(RentalEntity oRentalEntity) {
+        oRentalEntity.setId(null);
+        oSessionService.onlyAdminsOrCustomers();
+        if (oSessionService.isCustomer()) {
+            oRentalEntity.setCustomer(oSessionService.getSessionCustomer());
+            return oRentalRepository.save(oRentalEntity).getId();
+        } else {
+            return oRentalRepository.save(oRentalEntity).getId();
+        }
+    }
+
+    public RentalEntity update(RentalEntity oRentalEntityToSet) {
+        RentalEntity oRentalEntityFromDatabase = this.get(oRentalEntityToSet.getId());
+        oSessionService.onlyAdminsOrCustomersWithIisOwnData(oRentalEntityFromDatabase.getCustomer().getId());
+        if (oSessionService.isCustomer()) {
+            if (oRentalEntityToSet.getCustomer().getId().equals(oSessionService.getSessionCustomer().getId())) {
+                return oRentalRepository.save(oRentalEntityToSet);
+            } else {
+                throw new ResourceNotFoundException("Unauthorized");
+            }
+        } else {
+            return oRentalRepository.save(oRentalEntityToSet);
+        }
+    }
+
+    public Long delete(Long id) {
+        RentalEntity oRentalEntityFromDatabase = this.get(id);
+        oSessionService.onlyAdminsOrCustomersWithIisOwnData(oRentalEntityFromDatabase.getCustomer().getId());
+        oRentalRepository.deleteById(id);
+        return id;
+    }
+
+    public Long populate(Integer amount) {
+        oSessionService.onlyAdmins();
+        for (int i = 0; i < amount; i++) {
+            oRentalRepository
+                    .save(new RentalEntity(DataGenerationHelper.getSpeech(1), oCustomerService.getOneRandom()));
+        }
+        return oRentalRepository.count();
+    }
+
+    public RentalEntity getOneRandom() {oRentalRepository
+        oSessionService.onlyAdmins();
+        Pageable oPageable = PageRequest.of((int) (Math.random() * oRentalRepository.count()), 1);
+        return oRentalRepository.findAll(oPageable).getContent().get(0);
+    }
+
+    @Transactional
+    public Long empty() {
+        oSessionService.onlyAdmins();
+        oRentalRepository.deleteAll();
+        oRentalRepository.resetAutoIncrement();
+        oRentalRepository.flush();
+        return oRentalRepository.count();
+    }
+
 }

@@ -3,97 +3,104 @@ package net.carRenting.service;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import net.carRenting.entity.CarEntity;
 import net.carRenting.exception.ResourceNotFoundException;
 import net.carRenting.helper.DataGenerationHelper;
 import net.carRenting.repository.CarRepository;
 import net.carRenting.repository.CustomerRepository;
 
+@Service
 public class CarService {
-    @Autowired
-    CarRepository oCarRepository;
 
     @Autowired
-    CustomerRepository oCostumerRepository;
+    CarRepository carRepository;
 
     @Autowired
-    HttpServletRequest oHttpServletRequest;
+    CustomerRepository customerRepository;
 
     @Autowired
-    RentalService oRentalService;
+    CustomerRepository customerService;
 
     @Autowired
-    CustomerService oCostumerService;
+    SessionService sessionService;
 
     @Autowired
-    SessionService oSessionService;
+    RentalService rentalService;
 
-    public CarRepository get(Long id) {
-        return oCarRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Car not found"));
+    public CarEntity get(Long id) {
+        return carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Car not found"));
     }
 
-    public Page<CarEntity> getPage(Pageable oPageable, Long costumerId, Long rentalId) {
-        if (costumerId == 0) {
+    public Page<CarEntity> getPage(org.springframework.data.domain.Pageable pageable, Long customerId, Long rentalId) {
+        if (customerId == 0) {
             if (rentalId == 0) {
-                return oCarRepository.findAll(oPageable);
+                return carRepository.findAll(pageable);
             } else {
-                return oCarRepository.findByRentalId(rentalId, oPageable);
+                return carRepository.findByRentalId(rentalId, pageable);
             }
         } else {
-            return oCarRepository.findByCostumerId(costumerId, oPageable);
+            return carRepository.findByCustomerId(customerId, pageable);
         }
     }
 
-    public Long create(CarEntity oCarEntity) {
-        oSessionService.onlyAdminsOrCostumers();
-        oCarEntity.setId(null);        
-        if (oSessionService.isCostumer()) {
-            oCarEntity.setCostumer(oSessionService.getSessionCostumer());
-            return oCarRepository.save(oCarEntity).getId();
+    public Long create(CarEntity carEntity) {
+        sessionService.onlyAdminsOrCustomers();
+        carEntity.setId(null);
+        if (sessionService.isCustomer()) {
+            carEntity.setCustomer(sessionService.getSessionCustomer());
+            return carRepository.save(carEntity).getId();
         } else {
-            return oCarRepository.save(oCarEntity).getId();
+            return carRepository.save(carEntity).getId();
         }
     }
 
-    public CarEntity update(CarEntity oCarEntityToSet) {
-        CarEntity oCarEntityFromDatabase = this.get(oCarEntityToSet.getId());
-        oSessionService.onlyAdminsOrCostumersWithIisOwnData(oCarEntityFromDatabase.getCostumer().getId());
-        if (oSessionService.isCostumer()) {
-            oCarEntityToSet.setCostumer(oSessionService.getSessionCostumer());
-            return oCarRepository.save(oCarEntityToSet);
+    public CarEntity update(CarEntity carEntityToUpdate) {
+        CarEntity carEntityFromDatabase = this.get(carEntityToUpdate.getId());
+        sessionService.onlyAdminsOrCustomersWithIisOwnData(carEntityFromDatabase.getCustomer().getId());
+        if (sessionService.isCustomer()) {
+            carEntityToUpdate.setCustomer(sessionService.getSessionCustomer());
+            return carRepository.save(carEntityToUpdate);
         } else {
-            return oCarRepository.save(oCarEntityToSet);
+            return carRepository.save(carEntityToUpdate);
         }
     }
 
     public Long delete(Long id) {
-        CarEntity oCarEntityFromDatabase = this.get(id);
-        oSessionService.onlyAdminsOrCostumersWithIisOwnData(oCarEntityFromDatabase.getCostumer().getId());
-        oCarRepository.deleteById(id);
+        CarEntity carEntityFromDatabase = this.get(id);
+        sessionService.onlyAdminsOrCustomersWithIisOwnData(carEntityFromDatabase.getCustomer().getId());
+        carRepository.deleteById(id);
         return id;
     }
 
+    @Transactional
     public Long populate(Integer amount) {
-        oSessionService.onlyAdmins();
+        sessionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {
-            oCarRepository.save(new CarEntity(DataGenerationHelper.getSpeech(1),
-                    DataGenerationHelper.getSpeech(RentalLocalRandom.current().nextInt(5, 25)),
-                    oCostumerService.getOneRandom(), oRentalService.getOneRandom()));
+            String brand = DataGenerationHelper.getRandomCarBrand();
+            String model = DataGenerationHelper.getRandomCarModel();
+            Integer year = DataGenerationHelper.getRandomCarYear();
+            String transmission = DataGenerationHelper.getRandomTransmission();
+            String fuel = DataGenerationHelper.getRandomFuel();
+            Integer doors = DataGenerationHelper.getRandomDoors();
+            Integer seats = DataGenerationHelper.getRandomSeats();
+            String color = DataGenerationHelper.getRandomColor();
+            Integer hp = DataGenerationHelper.getRandomHorsePower();
+            
+            carRepository.save(new CarEntity(brand, model, year, transmission, fuel, doors, seats, color, hp, customerService.getOneRandom(), rentalService.getOneRandom()));
         }
-        return oCarRepository.count();
+        return carRepository.count();
     }
 
     @Transactional
     public Long empty() {
-        oSessionService.onlyAdmins();
-        oCarRepository.deleteAll();
-        oCarRepository.resetAutoIncrement();
-        oCarRepository.flush();
-        return oCarRepository.count();
+        sessionService.onlyAdmins();
+        carRepository.deleteAll();
+        carRepository.resetAutoIncrement();
+        carRepository.flush();
+        return carRepository.count();
     }
 }

@@ -22,17 +22,15 @@ public class CustomerEntity {
     @NotNull
     @NotBlank
     @Size(max = 50)
-    private String first_name;
+    private String firstName;
     
-    @NotNull
-    @NotBlank
     @Size(max = 50)
-    private String last_name;
+    private String lastName;
 
     @NotNull
     @NotBlank
     @Size(max = 20)
-    private String phone_number;
+    private String phoneNumber;
     
     @NotNull
     @NotBlank
@@ -57,7 +55,7 @@ public class CustomerEntity {
     @NotNull
     @NotBlank
     @Size(max = 10)
-    private String postal_code;
+    private String postalCode;
 
     @NotNull
     @NotBlank
@@ -65,7 +63,7 @@ public class CustomerEntity {
     private String country;
 
     @NotNull
-    private java.sql.Date member_since;
+    private java.sql.Date memberSince;
 
     @NotNull
     @NotBlank
@@ -76,6 +74,9 @@ public class CustomerEntity {
     @NotBlank
     @Size(max = 512)
     private String password;
+
+    @NotNull
+    private Boolean role;
 
     @ManyToOne
     @JoinColumn(name = "id_car")
@@ -89,36 +90,38 @@ public class CustomerEntity {
     }
 
     // Constructor con los campos obligatorios
-    public CustomerEntity(String first_name, String last_name, String phone_number, String email, String address, String city, String province, String postal_code, String country, java.sql.Date member_since, String username, String password) {
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.phone_number = phone_number;
+    public CustomerEntity(String firstName, String lastName, String phoneNumber, String email, String address, String city, String province, String postalCode, String country, java.sql.Date memberSince, String username, String password, Boolean role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.address = address;
         this.city = city;
         this.province = province;
-        this.postal_code = postal_code;
+        this.postalCode = postalCode;
         this.country = country;
-        this.member_since = member_since;
+        this.memberSince = memberSince;
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     // Constructor con todos los campos
-    public CustomerEntity(Long id, String first_name, String last_name, String phone_number, String email, String address, String city, String province, String postal_code, String country, java.sql.Date member_since, String username, String password, CarEntity car, RentalEntity rental) {
+    public CustomerEntity(Long id, String firstName, String lastName, String phoneNumber, String email, String address, String city, String province, String postalCode, String country, java.sql.Date memberSince, String username, String password, Boolean role, CarEntity car, RentalEntity rental) {
         this.id = id;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.phone_number = phone_number;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.address = address;
         this.city = city;
         this.province = province;
-        this.postal_code = postal_code;
+        this.postalCode = postalCode;
         this.country = country;
-        this.member_since = member_since;
+        this.memberSince = memberSince;
         this.username = username;
         this.password = password;
+        this.role = role;
         this.car = car;
         this.rental = rental;
     }
@@ -133,28 +136,28 @@ public class CustomerEntity {
         this.id = id;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getPhone_number() {
-        return phone_number;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmail() {
@@ -189,12 +192,12 @@ public class CustomerEntity {
         this.province = province;
     }
 
-    public String getPostal_code() {
-        return postal_code;
+    public String getPostalCode() {
+        return postalCode;
     }
 
-    public void setPostal_code(String postal_code) {
-        this.postal_code = postal_code;
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     public String getCountry() {
@@ -205,12 +208,12 @@ public class CustomerEntity {
         this.country = country;
     }
 
-    public java.sql.Date getMember_since() {
-        return member_since;
+    public java.sql.Date getMemberSince() {
+        return memberSince;
     }
 
-    public void setMember_since(java.sql.Date member_since) {
-        this.member_since = member_since;
+    public void setMemberSince(java.sql.Date memberSince) {
+        this.memberSince = memberSince;
     }
 
     public String getUsername() {
@@ -227,6 +230,14 @@ public class CustomerEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getRole() {
+        return role;
+    }
+
+    public void setRole(Boolean role) {
+        this.role = role;
     }
 
     public CarEntity getCar() {

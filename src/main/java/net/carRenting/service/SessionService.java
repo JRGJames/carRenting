@@ -3,24 +3,25 @@ package net.carRenting.service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.servlet.http.HttpServletRequest;
-import net.carRenting.bean.CostumerBean;
-import net.carRenting.entity.CostumerEntity;
+import net.carRenting.bean.CustomerBean;
+import net.carRenting.entity.CustomerEntity;
+import net.carRenting.exception.ResourceNotFoundException;
 import net.carRenting.exception.UnauthorizedException;
 import net.carRenting.helper.JWTHelper;
-import net.carRenting.repository.CostumerRepository;
+import net.carRenting.repository.CustomerRepository;
 
 public class SessionService {
 
     @Autowired
-    CostumerRepository oCostumerRepository;
+    CustomerRepository oCustomerRepository;
 
     @Autowired
     HttpServletRequest oHttpServletRequest;
 
-    public String login(CostumerBean oCostumerBean) {
-        oCostumerRepository.findByUsernameAndPassword(oCostumerBean.getUsername(), oCostumerBean.getPassword())
-                .orElseThrow(() -> new ResourceNotFoundException("Wrong User or password"));
-        return JWTHelper.generateJWT(oCostumerBean.getUsername());
+    public String login(CustomerBean oCustomerBean) {
+        oCustomerRepository.findByUsernameAndPassword(oCustomerBean.getUsername(), oCustomerBean.getPassword())
+                .orElseThrow(() -> new ResourceNotFoundException("Wrong Customer or password"));
+        return JWTHelper.generateJWT(oCustomerBean.getUsername());
     }
 
     public String getSessionUsername() {        
@@ -31,9 +32,9 @@ public class SessionService {
         }
     }
 
-    public CostumerEntity getSessionCostumer() {
+    public CustomerEntity getSessionCustomer() {
         if (this.getSessionUsername() != null) {
-            return oCostumerRepository.findByUsername(this.getSessionUsername()).orElse(null);    
+            return oCustomerRepository.findByUsername(this.getSessionUsername()).orElse(null);    
         } else {
             return null;
         }
@@ -41,7 +42,7 @@ public class SessionService {
 
     public Boolean isSessionActive() {
         if (this.getSessionUsername() != null) {
-            return oCostumerRepository.findByUsername(this.getSessionUsername()).isPresent();
+            return oCustomerRepository.findByUsername(this.getSessionUsername()).isPresent();
         } else {
             return false;
         }
@@ -49,19 +50,19 @@ public class SessionService {
 
     public Boolean isAdmin() {
         if (this.getSessionUsername() != null) {
-            CostumerEntity oUserEntityInSession = oCostumerRepository.findByUsername(this.getSessionUsername())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-            return Boolean.FALSE.equals(oUserEntityInSession.getRole());
+            CustomerEntity oCustomerEntityInSession = oCustomerRepository.findByUsername(this.getSessionUsername())
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+            return Boolean.FALSE.equals(oCustomerEntityInSession.getRole());
         } else {
             return false;
         }
     }
 
-    public Boolean isCostumer() {
+    public Boolean isCustomer() {
         if (this.getSessionUsername() != null) {
-            CostumerEntity oUserEntityInSession = oCostumerRepository.findByUsername(this.getSessionUsername())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-            return Boolean.TRUE.equals(oUserEntityInSession.getRole());
+            CustomerEntity oCustomerEntityInSession = oCustomerRepository.findByUsername(this.getSessionUsername())
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+            return Boolean.TRUE.equals(oCustomerEntityInSession.getRole());
         } else {
             return false;
         }
@@ -73,34 +74,34 @@ public class SessionService {
         }
     }
 
-    public void onlyCostumers() {
-        if (!this.isCostumer()) {
-            throw new UnauthorizedException("Only costumers can do this");
+    public void onlyCustomers() {
+        if (!this.isCustomer()) {
+            throw new UnauthorizedException("Only customers can do this");
         }
     }
 
-    public void onlyAdminsOrUsers() {
+    public void onlyAdminsOrCustomers() {
         if (!this.isSessionActive()) {
-            throw new UnauthorizedException("Only admins or users can do this");
+            throw new UnauthorizedException("Only admins or customers can do this");
         }
     }
 
-    public void onlyCostumersWithIisOwnData(Long id_costumer) {
-        if (!this.isCostumer()) {
-            throw new UnauthorizedException("Only costumers can do this");
+    public void onlyCustomersWithIisOwnData(Long id_customer) {
+        if (!this.isCustomer()) {
+            throw new UnauthorizedException("Only customers can do this");
         }
-        if (!this.getSessionUser().getId().equals(id_costumer)) {
-            throw new UnauthorizedException("Only costumers can do this");
+        if (!this.getSessionCustomer().getId().equals(id_customer)) {
+            throw new UnauthorizedException("Only customers can do this");
         }
     }
 
-    public void onlyAdminsOrUsersWithIisOwnData(Long id_user) {
+    public void onlyAdminsOrCustomersWithIisOwnData(Long id_user) {
         if (this.isSessionActive()) {
             if (!this.isAdmin()) {
-                if (!this.isCostumer()) {
-                    throw new UnauthorizedException("Only admins or costumers can do this");
+                if (!this.isCustomer()) {
+                    throw new UnauthorizedException("Only admins or customers can do this");
                 } else {
-                    if (!this.getSessionCostumer().getId().equals(id_user)) {
+                    if (!this.getSessionCustomer().getId().equals(id_user)) {
                         throw new UnauthorizedException("Only admins or costumers with its own data can do this");
                     }
                 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.carRenting.bean.CostumerBean;
+import net.carRenting.bean.CustomerBean;
 import net.carRenting.service.SessionService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -20,7 +20,7 @@ public class SessionController {
     SessionService oSessionService;
 
     @PostMapping()
-    public ResponseEntity<String> login(@RequestBody CostumerBean oCostumerBean) {
+    public ResponseEntity<String> login(@RequestBody CustomerBean oCostumerBean) {
         return ResponseEntity.ok("\"" + oSessionService.login(oCostumerBean) + "\"");
     }
 

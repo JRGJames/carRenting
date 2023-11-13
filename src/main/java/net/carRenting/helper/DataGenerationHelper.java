@@ -1,5 +1,8 @@
 package net.carRenting.helper;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Year;
 import java.util.Random;
 
 public class DataGenerationHelper {
@@ -14,12 +17,82 @@ public class DataGenerationHelper {
             "Serrano", "Quilez", "Aznar", "Aparici"
     };
 
-    public static String getRadomName() {
+    private static final String[] aPhonePrefixes = { "600", "601", "602", "603", "604", "605", "606", "607", "608",
+            "609" };
+
+    private static final String[] domains = { "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "example.com" };
+
+    private static final String[] streetNames = { "Main", "Oak", "Maple", "Elm", "Cedar", "Pine", "Birch", "Willow",
+            "Holly", "Poplar" };
+    private static final String[] streetTypes = { "St", "Ave", "Blvd", "Dr", "Ln", "Rd", "Ct", "Pl" };
+
+    private static final String[] cities = { "New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia",
+            "San Antonio", "Dallas", "San Diego", "San Jose" };
+
+    private static final String[] provinces = { "California", "Texas", "Florida", "New York", "Pennsylvania",
+            "Illinois", "Ohio", "Georgia", "North Carolina", "Michigan" };
+
+    private static final String[] countries = { "United States", "Canada", "United Kingdom", "Germany", "France",
+            "Japan", "China", "India", "Brazil", "Australia" };
+
+    private static final String[] aUsernames = {
+            "user123", "coolCoder", "gamerGirl", "javaMaster", "codingWizard",
+            "dataGeek", "techExplorer", "webDevPro", "codeNinja", "byteBender",
+            "codeSlinger", "javaJunkie", "devGuru", "bugHunter", "debuggerKing",
+            "codeCruncher", "scriptHero", "codeWarrior", "pixelPirate", "cryptoCoder",
+    };
+
+    public static String getRandomName() {
         return aNames[(int) (Math.random() * aNames.length)];
     }
 
-    public static String getRadomSurname() {
+    public static String getRandomSurname() {
         return aSurnames[(int) (Math.random() * aSurnames.length)];
+    }
+
+    public static String getRandomPhoneNumber() {
+        return aPhonePrefixes[(int) (Math.random() * aPhonePrefixes.length)] + generateRandomNumericString(7);
+    }
+
+    public static String getRandomEmail() {
+        return getRandomUsername() + "@" + domains[(int) (Math.random() * domains.length)];
+    }
+
+    public static String getRandomAddress() {
+        return generateRandomNumericString(3) + " " + streetNames[(int) (Math.random() * streetNames.length)] + " "
+                + streetTypes[(int) (Math.random() * streetTypes.length)];
+    }
+
+    public static String getRandomCity() {
+        return cities[(int) (Math.random() * cities.length)];
+    }
+
+    public static String getRandomProvince() {
+        return provinces[(int) (Math.random() * provinces.length)];
+    }
+
+    public static String getRandomPostalCode() {
+        return generateRandomNumericString(5);
+    }
+
+    public static String getRandomCountry() {
+        return countries[(int) (Math.random() * countries.length)];
+    }
+
+    public static Date getCurrentSqlDate() {
+        return Date.valueOf(LocalDate.now());
+    }
+
+    public static String getRandomUsername() {
+        return aUsernames[(int) (Math.random() * aUsernames.length)];
+    }
+
+    private static String generateRandomNumericString(int length) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            sb.append((char) ('0' + (int) (Math.random() * 10)));
+        }
+        return sb.toString();
     }
 
     public static String doNormalizeString(String cadena) {
@@ -32,82 +105,48 @@ public class DataGenerationHelper {
         return cadenaSinAcentos;
     }
 
-    private static Random random = new Random();
+    private static final String[] carBrands = { "Toyota", "Ford", "Honda", "Chevrolet", "Volkswagen", "Nissan", "Hyundai", "BMW", "Mercedes-Benz", "Audi" };
+    private static final String[] carModels = { "Camry", "Fusion", "Civic", "Malibu", "Jetta", "Altima", "Elantra", "X5", "E-Class", "A4" };
+    private static final String[] transmissions = { "Automatic", "Manual" };
+    private static final String[] fuels = { "Gasoline", "Diesel", "Electric", "Hybrid" };
+    private static final int[] doors = { 2, 4 };
+    private static final int[] seats = { 2, 4, 5 };
+    private static final String[] colors = { "Red", "Blue", "Black", "White", "Silver", "Gray", "Green", "Yellow", "Orange", "Brown" };
 
-    // Define arrays for different word categories
-    private static String[] articles = { "the", "a", "one" };
-    private static String[] nouns = { "cat", "dog", "book", "birds", "sun", "sandwich", "friend", "car", "house"};
-    private static String[] verbs = { "sleeps", "barks", "reads", "fly", "shines", "run", "ate", "is" };    
-    private static String[] adverbs = { "loudly", "quickly", "brightly", "slowly", "softly" };
-    private static String[] conjunctions = { "and", "but", "or" };
-    private static String[] subordinatingConjunctions = { "although", "because", "while", "if", "when", "as", "after",
-            "before", "since", "until", "unless", "where", "wherever", "whether", "while", "even if", "even though",
-            "once", "provided that", "so that", "than", "though", "in order to", "so that", "that", "unless", "until",
-            "when", "whenever", "where", "wherever", "whether", "while" };
-    public static String generateSentence() {
-        // Randomly decide if it's a simple, compound, or complex sentence
-        int sentenceType = random.nextInt(3);
-        if (sentenceType == 0) {
-            return generateSimpleSentence();
-        } else if (sentenceType == 1) {
-            return generateCompoundSentence();
-        } else {
-            return generateComplexSentence();
-        }
+    public static String getRandomCarBrand() {
+        return carBrands[(int) (Math.random() * carBrands.length)];
     }
 
-    public static String generateSimpleSentence() {
-        String subject = generateNounPhrase();
-        String verb = generateVerbPhrase();
-        return subject + " " + verb;
+    public static String getRandomCarModel() {
+        return carModels[(int) (Math.random() * carModels.length)];
     }
 
-    public static String generateCompoundSentence() {
-        String simpleSentence1 = generateSimpleSentence();
-        String conjunction = conjunctions[random.nextInt(conjunctions.length)];
-        String simpleSentence2 = generateSimpleSentence();
-        return simpleSentence1 + " " + conjunction + " " + simpleSentence2;
+    public static int getRandomCarYear() {
+        int currentYear = Year.now().getValue();
+        return 1930 + (int) (Math.random() * (currentYear - 1930 + 1));
     }
 
-    public static String generateComplexSentence() {
-        String subordinatingConjunction = subordinatingConjunctions[random.nextInt(subordinatingConjunctions.length)];
-        String subordinateClause = subordinatingConjunction + " " + generateSimpleSentence();
-        String mainClause = generateMainClause();
-        return subordinateClause + " " + mainClause;
+    public static String getRandomTransmission() {
+        return transmissions[(int) (Math.random() * transmissions.length)];
     }
 
-    public static String generateMainClause() {
-        if (random.nextBoolean()) {
-            return generateSimpleSentence();
-        } else {
-            return generateCompoundSentence();
-        }
+    public static String getRandomFuel() {
+        return fuels[(int) (Math.random() * fuels.length)];
     }
 
-    public static String generateNounPhrase() {
-        String article = articles[random.nextInt(articles.length)];
-        String noun = nouns[random.nextInt(nouns.length)];
-        return article + " " + noun;
+    public static int getRandomDoors() {
+        return doors[(int) (Math.random() * doors.length)];
     }
 
-    public static String generateVerbPhrase() {
-        String verb = verbs[random.nextInt(verbs.length)];
-        // Randomly decide if it's just a verb or a verb with an adverb
-        if (random.nextBoolean()) {
-            String adverb = adverbs[random.nextInt(adverbs.length)];
-            return verb + " " + adverb;
-        } else {
-            return verb;
-        }
+    public static int getRandomSeats() {
+        return seats[(int) (Math.random() * seats.length)];
     }
 
-    public static String getSpeech(int amount) {
-        String sentences = "";
-        for (int i = 0; i < amount; i++) {
-            String sentence = generateSentence();
-            sentences += sentence.substring(0, 1).toUpperCase() + sentence.substring(1) + ". ";
-        }
-        return sentences;
+    public static String getRandomColor() {
+        return colors[(int) (Math.random() * colors.length)];
     }
 
+    public static int getRandomHorsePower() {
+        return 40 + (int) (Math.random() * (1200 - 40 + 1));
+    }
 }

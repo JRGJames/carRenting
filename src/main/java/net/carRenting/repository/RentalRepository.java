@@ -11,7 +11,7 @@ public interface RentalRepository extends JpaRepository<RentalEntity, Long> {
     Page<RentalEntity> findByCustomerId(Long id, Pageable pageable);
 
     @Query(value = "SELECT t.*,count(r.id) FROM rental t, car r WHERE t.id = r.id_rental GROUP BY t.id ORDER BY COUNT(r.id) desc", nativeQuery = true)
-    Page<RentalEntity> findThreadsByRepliesNumberDesc(Pageable pageable);
+    Page<RentalEntity> findRentalsByCarsNumberDesc(Pageable pageable);
 
     @Query(value = "SELECT t.*,count(r.id) FROM rental t, car r WHERE t.id = r.id_rental and t.id_costumer=$1 GROUP BY t.id ORDER BY COUNT(r.id) desc", nativeQuery = true)
     Page<RentalEntity> findRentalsByCarsNumberDescFilterByCustomerId(Long customerId, Pageable pageable);

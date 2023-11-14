@@ -1,9 +1,10 @@
 package net.carRenting.entity;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
@@ -72,7 +73,8 @@ public class CustomerEntity {
     private String country;
 
     @NotNull
-    private Date memberSince;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private LocalDateTime memberSince;
 
     @NotNull
     @NotBlank
@@ -103,7 +105,7 @@ public class CustomerEntity {
 
     // Constructor con todos los campos
     public CustomerEntity(Long id, String firstName, String lastName, String phoneNumber, String email, String address,
-            String city, String province, String postalCode, String country, Date memberSince, String username,
+            String city, String province, String postalCode, String country, String username,
             String password, Boolean role) {
         this.id = id;
         this.firstName = firstName;
@@ -115,7 +117,7 @@ public class CustomerEntity {
         this.province = province;
         this.postalCode = postalCode;
         this.country = country;
-        this.memberSince = memberSince;
+        this.memberSince = LocalDateTime.now();
         this.username = username;
         this.password = password;
         this.role = role;
@@ -123,7 +125,7 @@ public class CustomerEntity {
 
     // Constructor con los campos obligatorios
     public CustomerEntity(String firstName, String lastName, String phoneNumber, String email, String address,
-            String city, String province, String postalCode, String country, Date memberSince, String username,
+            String city, String province, String postalCode, String country, LocalDateTime memberSince, String username,
             String password, Boolean role) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -227,11 +229,11 @@ public class CustomerEntity {
         this.country = country;
     }
 
-    public Date getMemberSince() {
+    public LocalDateTime getMemberSince() {
         return memberSince;
     }
 
-    public void setMemberSince(Date memberSince) {
+    public void setMemberSince(LocalDateTime memberSince) {
         this.memberSince = memberSince;
     }
 

@@ -1,7 +1,6 @@
 package net.carRenting.service;
 
-import java.sql.Date;
-
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -91,8 +90,8 @@ public class RentalService {
     public Long populate(Integer amount) {
         sessionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {
-            Date pickupDate = DataGenerationHelper.getRandomPickupDate();
-            Date dropoffDate = DataGenerationHelper.getRandomDropoffDate(pickupDate);
+            LocalDateTime pickupDate = DataGenerationHelper.getRandomPickupDate();
+            LocalDateTime dropoffDate = DataGenerationHelper.getRandomDropoffDate(pickupDate);
             String pickupLocation = DataGenerationHelper.getRandomPickupLocation();
             String dropoffLocation = DataGenerationHelper.getRandomDropoffLocation();
             Float cost = DataGenerationHelper.getRandomCost();
@@ -116,5 +115,4 @@ public class RentalService {
         rentalRepository.flush();
         return rentalRepository.count();
     }
-
 }

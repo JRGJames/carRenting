@@ -92,8 +92,9 @@ public class CarService {
             Integer seats = DataGenerationHelper.getRandomSeats();
             String color = DataGenerationHelper.getRandomColor();
             Integer hp = DataGenerationHelper.getRandomHorsePower();
+            String image = DataGenerationHelper.getRandomImage();
             
-            carRepository.save(new CarEntity(brand, model, year, transmission, fuel, doors, seats, color, hp, customerService.getOneRandom(), rentalService.getOneRandom()));
+            carRepository.save(new CarEntity(brand, model, year, transmission, fuel, doors, seats, color, hp, image, customerService.getOneRandom(), rentalService.getOneRandom()));
         }
         return carRepository.count();
     }

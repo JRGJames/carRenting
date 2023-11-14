@@ -1,8 +1,10 @@
 package net.carRenting.entity;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,10 +32,12 @@ public class RentalEntity {
     private Long idCar;
 
     @NotNull
-    private Date pickupDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private LocalDateTime pickupDate;
 
     @NotNull
-    private Date dropoffDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private LocalDateTime dropoffDate;
 
     @NotNull
     @Size(max = 50)
@@ -57,7 +61,7 @@ public class RentalEntity {
         cars = new ArrayList<>();
     }
 
-    public RentalEntity(Long id, Date pickupDate, Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
+    public RentalEntity(Long id, LocalDateTime pickupDate, LocalDateTime dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
         this.id = id;
         this.pickupDate = pickupDate;
         this.dropoffDate = dropoffDate;
@@ -66,7 +70,7 @@ public class RentalEntity {
         this.cost = cost;
     }
 
-    public RentalEntity(Date pickupDate, Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
+    public RentalEntity(LocalDateTime pickupDate, LocalDateTime dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
         this.pickupDate = pickupDate;
         this.dropoffDate = dropoffDate;
         this.pickupLocation = pickupLocation;
@@ -74,7 +78,7 @@ public class RentalEntity {
         this.cost = cost;
     }
 
-    public RentalEntity(Date pickupDate, Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost, CustomerEntity customer) {
+    public RentalEntity(LocalDateTime pickupDate, LocalDateTime dropoffDate, String pickupLocation, String dropoffLocation, Float cost, CustomerEntity customer) {
         this.pickupDate = pickupDate;
         this.dropoffDate = dropoffDate;
         this.pickupLocation = pickupLocation;
@@ -93,19 +97,19 @@ public class RentalEntity {
         this.id = id;
     }
 
-    public Date getPickupDate() {
+    public LocalDateTime getPickupDate() {
         return pickupDate;
     }
 
-    public void setPickupDate(Date pickupDate) {
+    public void setPickupDate(LocalDateTime pickupDate) {
         this.pickupDate = pickupDate;
     }
 
-    public Date getDropoffDate() {
+    public LocalDateTime getDropoffDate() {
         return dropoffDate;
     }
 
-    public void setDropoffDate(Date dropoffDate) {
+    public void setDropoffDate(LocalDateTime dropoffDate) {
         this.dropoffDate = dropoffDate;
     }
 

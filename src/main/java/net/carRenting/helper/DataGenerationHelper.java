@@ -1,12 +1,14 @@
 package net.carRenting.helper;
 
-import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DataGenerationHelper {
 
-    //Customer
+    // Customer
 
     private static final String[] names = { "Mónica", "José Antonio", "Laura", "Lucas", "Eva", "Eloy", "Jesús", "Alan",
             "Pablo", "Paula", "Raquel", "Nieves", "Elena", "Sergio", "Jaime", "Fernando", "Rafael" };
@@ -80,12 +82,21 @@ public class DataGenerationHelper {
         return countries[(int) (Math.random() * countries.length)];
     }
 
-    public static Date getCurrentSqlDate() {
-        return Date.valueOf(LocalDate.now());
+    public static int getRandomInt(int min, int max) {
+        Random rand = new Random();
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+        return randomNum;
     }
 
     public static String getRandomUsername() {
         return usernames[(int) (Math.random() * usernames.length)];
+    }
+
+    public static LocalDateTime getRadomDate() {
+        long minDay = LocalDate.of(2020, 1, 1).toEpochDay();
+        long maxDay = LocalDate.of(2023, 10, 31).toEpochDay();
+        long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+        return LocalDate.ofEpochDay(randomDay).atTime(getRandomInt(0, 23), getRandomInt(0, 59), getRandomInt(0, 59));
     }
 
     private static String generateRandomNumericString(int length) {
@@ -96,15 +107,21 @@ public class DataGenerationHelper {
         return sb.toString();
     }
 
-    //Car
+    // Car
 
-    private static final String[] carBrands = { "Toyota", "Ford", "Honda", "Chevrolet", "Volkswagen", "Nissan", "Hyundai", "BMW", "Mercedes-Benz", "Audi" };
-    private static final String[] carModels = { "Camry", "Fusion", "Civic", "Malibu", "Jetta", "Altima", "Elantra", "X5", "E-Class", "A4" };
+    private static final String[] carBrands = { "Toyota", "Ford", "Honda", "Chevrolet", "Volkswagen", "Nissan",
+            "Hyundai", "BMW", "Mercedes-Benz", "Audi" };
+    private static final String[] carModels = { "Camry", "Fusion", "Civic", "Malibu", "Jetta", "Altima", "Elantra",
+            "X5", "E-Class", "A4" };
     private static final String[] transmissions = { "Automatic", "Manual" };
     private static final String[] fuels = { "Gasoline", "Diesel", "Electric", "Hybrid" };
     private static final int[] doors = { 2, 4 };
     private static final int[] seats = { 2, 4, 5 };
-    private static final String[] colors = { "Red", "Blue", "Black", "White", "Silver", "Gray", "Green", "Yellow", "Orange", "Brown" };
+    private static final String[] colors = { "Red", "Blue", "Black", "White", "Silver", "Gray", "Green", "Yellow",
+            "Orange", "Brown" };
+    private static final String[] carImages = { "car1.jpg", "car2.jpg", "car3.jpg", "car4.jpg", "car5.jpg" };
+
+    private static Random random = new Random();
 
     public static String getRandomCarBrand() {
         return carBrands[(int) (Math.random() * carBrands.length)];
@@ -143,18 +160,25 @@ public class DataGenerationHelper {
         return 40 + (int) (Math.random() * (1200 - 40 + 1));
     }
 
-    //Rental
+    public static String getRandomImage() {
+        // Obtén un índice aleatorio para seleccionar una imagen de coche del array
+        int randomIndex = random.nextInt(carImages.length);
+        return carImages[randomIndex];
+    }
+
+    // Rental
 
     private static final String[] locations = { "Airport", "Downtown", "Suburb", "Train Station", "Hotel" };
 
-    public static Date getRandomPickupDate() {
+    public static LocalDateTime getRandomPickupDate() {
         int daysToAdd = (int) (Math.random() * 14); // Para una fecha aleatoria en los próximos 14 días
-        return Date.valueOf(LocalDate.now().plusDays(daysToAdd));
+        return LocalDateTime.now().plusDays(daysToAdd);
     }
 
-    public static Date getRandomDropoffDate(Date pickupDate) {
-        int daysToAdd = 1 + (int) (Math.random() * 30); // Para una fecha aleatoria entre 1 y 14 días después de la fecha de recogida
-        return Date.valueOf(pickupDate.toLocalDate().plusDays(daysToAdd));
+    public static LocalDateTime getRandomDropoffDate(LocalDateTime pickupDate) {
+        int daysToAdd = 1 + (int) (Math.random() * 30); // Para una fecha aleatoria entre 1 y 30 días después de la
+                                                        // fecha de recogida
+        return pickupDate.plusDays(daysToAdd);
     }
 
     public static String getRandomPickupLocation() {
@@ -168,5 +192,4 @@ public class DataGenerationHelper {
     public static float getRandomCost() {
         return 50 + (float) (Math.random() * 450); // Para un costo aleatorio entre 50 y 500
     }
-
 }

@@ -75,7 +75,7 @@ public class CarEntity {
     public CarEntity() {
     }
 
-    public CarEntity(String brand, String model, Integer year, String transmission, String fuel, Integer doors, Integer seats, String color, Integer hp) {
+    public CarEntity(String brand, String model, Integer year, String transmission, String fuel, Integer doors, Integer seats, String color, Integer hp, String image) {
         this.brand = brand;
         this.model = model;
         this.year = year;
@@ -85,9 +85,10 @@ public class CarEntity {
         this.seats = seats;
         this.color = color;
         this.hp = hp;
+        this.image = image;
     }
 
-    public CarEntity(Long id, String brand, String model, Integer year, String transmission, String fuel, Integer doors, Integer seats, String color, Integer hp) {
+    public CarEntity(Long id, String brand, String model, Integer year, String transmission, String fuel, Integer doors, Integer seats, String color, Integer hp, String image) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -98,9 +99,10 @@ public class CarEntity {
         this.seats = seats;
         this.color = color;
         this.hp = hp;
+        this.image = image;
     }
 
-    public CarEntity(String brand, String model, Integer year, String transmission, String fuel, Integer doors, Integer seats, String color, Integer hp, CustomerEntity customer, RentalEntity rental) {
+    public CarEntity(String brand, String model, Integer year, String transmission, String fuel, Integer doors, Integer seats, String color, Integer hp, String image, CustomerEntity customer, RentalEntity rental) {
         this.brand = brand;
         this.model = model;
         this.year = year;
@@ -110,6 +112,7 @@ public class CarEntity {
         this.seats = seats;
         this.color = color;
         this.hp = hp;
+        this.image = image;
         this.customer = customer;
         this.rental = rental;
     }

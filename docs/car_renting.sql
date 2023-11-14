@@ -33,7 +33,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `car` (
-  `id` int NOT NULL,
+  `id` bigint NOT NULL,
   `brand` varchar(50) NOT NULL,
   `model` varchar(50) NOT NULL,
   `year` int NOT NULL,
@@ -42,48 +42,49 @@ CREATE TABLE `car` (
   `doors` int NOT NULL,
   `seats` int NOT NULL,
   `color` varchar(20) NOT NULL,
-  `hp` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `hp` int NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `id_customer` bigint NOT NULL DEFAULT '1',
+  `id_rental` bigint NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_unicode_ci;
 
 -- --------------------------------------------------------
+
+-- Estructura de tabla para la tabla `rental`
+--
+
+CREATE TABLE `rental` (
+  `id` bigint NOT NULL,
+  `pickup_date` datetime NOT NULL,
+  `dropoff_date` datetime NOT NULL,
+  `pickup_location` varchar(50) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `dropoff_location` varchar(50) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `cost` float NOT NULL,
+  `id_customer` bigint NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_unicode_ci;
 
 --
 -- Estructura de tabla para la tabla `customer`
 --
 
 CREATE TABLE `customer` (
-  `id` int NOT NULL,
-  `first_name` varchar(50) NOT NULL,
-  `last_name` varchar(50) NOT NULL,
-  `phone_number` varchar(20) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `city` varchar(50) NOT NULL,
-  `province` varchar(50) NOT NULL,
-  `postal_code` varchar(10) NOT NULL,
-  `country` varchar(50) NOT NULL,
-  `member_since` date NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(512) NOT NULL,
+  `id` bigint NOT NULL,
+  `first_name` varchar(50) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `last_name` varchar(50) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `phone_number` varchar(20) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `email` varchar(100) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `address` varchar(255) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `city` varchar(50) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `province` varchar(50) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `postal_code` varchar(10) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `country` varchar(50) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `member_since` datetime NOT NULL,
+  `username` varchar(50) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
+  `password` varchar(512) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL,
   `role` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET= utf16 COLLATE=utf16_unicode_ci;
 
 -- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `rental`
---
-
-CREATE TABLE `rental` (
-  `id` int NOT NULL,
-  `id_customer` int NOT NULL,
-  `id_car` int NOT NULL,
-  `pickup_date` date NOT NULL,
-  `dropoff_date` date NOT NULL,
-  `pickup_location` varchar(50) NOT NULL,
-  `dropoff_location` varchar(50) NOT NULL,
-  `cost` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Índices para tablas volcadas
@@ -96,15 +97,15 @@ ALTER TABLE `car`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `customer`
---
-ALTER TABLE `customer`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indices de la tabla `rental`
 --
 ALTER TABLE `rental`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `customer`
+--
+ALTER TABLE `customer`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -115,19 +116,19 @@ ALTER TABLE `rental`
 -- AUTO_INCREMENT de la tabla `car`
 --
 ALTER TABLE `car`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `customer`
---
-ALTER TABLE `customer`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `rental`
 --
 ALTER TABLE `rental`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `customer`
+--
+ALTER TABLE `customer`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,15 +1,12 @@
 package net.carRenting.service;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import jakarta.servlet.http.HttpServletRequest;
 import net.carRenting.entity.CustomerEntity;
 import net.carRenting.exception.ResourceNotFoundException;
@@ -22,11 +19,9 @@ public class CustomerService {
 
     private final String carrentingPASSWORD = "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e";
 
-    String memberSinceString = "2012-04-23";
-    Date memberSince = Date.valueOf(memberSinceString);
+    String memberSinceString = "2012-04-23T00:00:00";
+    LocalDateTime memberSince = LocalDateTime.parse(memberSinceString);
     
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
     @Autowired
     CustomerRepository customerRepository;
 
@@ -102,7 +97,7 @@ public class CustomerService {
             String province = DataGenerationHelper.getRandomProvince();
             String postalCode = DataGenerationHelper.getRandomPostalCode();
             String country = DataGenerationHelper.getRandomCountry();
-            Date memberSince = DataGenerationHelper.getCurrentSqlDate();
+            LocalDateTime memberSince = DataGenerationHelper.getRadomDate();
             String username = DataGenerationHelper.getRandomUsername();
             customerRepository.save(new CustomerEntity(name, surname, phoneNumber, email, address, city, province,
                     postalCode, country, memberSince, username,

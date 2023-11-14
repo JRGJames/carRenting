@@ -1,11 +1,16 @@
 package net.carRenting.entity;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,10 +30,10 @@ public class RentalEntity {
     private Long idCar;
 
     @NotNull
-    private java.sql.Date pickupDate;
+    private Date pickupDate;
 
     @NotNull
-    private java.sql.Date dropoffDate;
+    private Date dropoffDate;
 
     @NotNull
     @Size(max = 50)
@@ -45,11 +50,14 @@ public class RentalEntity {
     @JoinColumn(name = "id_customer", insertable = false, updatable = false)
     private CustomerEntity customer;
 
-    @ManyToOne
-    @JoinColumn(name = "id_car", insertable = false, updatable = false)
-    private CarEntity car;
+   @OneToMany(mappedBy = "rental", fetch = jakarta.persistence.FetchType.LAZY)
+    private List<CarEntity> cars;
 
-    public RentalEntity(Long id, java.sql.Date pickupDate, java.sql.Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
+    public RentalEntity() {
+        cars = new ArrayList<>();
+    }
+
+    public RentalEntity(Long id, Date pickupDate, Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
         this.id = id;
         this.pickupDate = pickupDate;
         this.dropoffDate = dropoffDate;
@@ -58,7 +66,7 @@ public class RentalEntity {
         this.cost = cost;
     }
 
-    public RentalEntity(java.sql.Date pickupDate, java.sql.Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
+    public RentalEntity(Date pickupDate, Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
         this.pickupDate = pickupDate;
         this.dropoffDate = dropoffDate;
         this.pickupLocation = pickupLocation;
@@ -66,14 +74,13 @@ public class RentalEntity {
         this.cost = cost;
     }
 
-    public RentalEntity(java.sql.Date pickupDate, java.sql.Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost, CustomerEntity customer, CarEntity car) {
+    public RentalEntity(Date pickupDate, Date dropoffDate, String pickupLocation, String dropoffLocation, Float cost, CustomerEntity customer) {
         this.pickupDate = pickupDate;
         this.dropoffDate = dropoffDate;
         this.pickupLocation = pickupLocation;
         this.dropoffLocation = dropoffLocation;
         this.cost = cost;
         this.customer = customer;
-        this.car = car;
     }
 
     // Métodos getters y setters para todos los campos
@@ -86,19 +93,19 @@ public class RentalEntity {
         this.id = id;
     }
 
-    public java.sql.Date getPickupDate() {
+    public Date getPickupDate() {
         return pickupDate;
     }
 
-    public void setPickupDate(java.sql.Date pickupDate) {
+    public void setPickupDate(Date pickupDate) {
         this.pickupDate = pickupDate;
     }
 
-    public java.sql.Date getDropoffDate() {
+    public Date getDropoffDate() {
         return dropoffDate;
     }
 
-    public void setDropoffDate(java.sql.Date dropoffDate) {
+    public void setDropoffDate(Date dropoffDate) {
         this.dropoffDate = dropoffDate;
     }
 
@@ -134,11 +141,7 @@ public class RentalEntity {
         this.customer = customer;
     }
 
-    public CarEntity getCar() {
-        return car;
-    }
-
-    public void setCar(CarEntity car) {
-        this.car = car;
+    public int getCars() {
+        return cars.size();
     }
 }

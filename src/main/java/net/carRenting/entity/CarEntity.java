@@ -22,44 +22,47 @@ public class CarEntity {
     @NotNull
     @NotBlank
     @Size(max = 50)
-    String brand;
+    private String brand;
     
     @NotNull
     @NotBlank
     @Size(max = 50)
-    String model;
+    private String model;
 
     @NotNull
     @NotBlank
-    Integer year;
+    private Integer year;
     
     @NotNull
     @NotBlank
     @Size(max = 20)
-    String transmission;
+    private String transmission;
 
     @NotNull
     @NotBlank
     @Size(max = 20)
-    String fuel;
+    private String fuel;
     
     @NotNull
     @NotBlank
-    Integer doors;
+    private Integer doors;
 
     @NotNull
     @NotBlank
-    Integer seats;
+    private Integer seats;
     
     @NotNull
     @NotBlank
     @Size(max = 20)
-    String color;
+    private String color;
 
     @NotNull
     @NotBlank
-    Integer hp;
+    private Integer hp;
 
+    @NotNull
+    @Size(max = 255)
+    private String image;
 
     @ManyToOne
     @JoinColumn(name = "id_costomer")

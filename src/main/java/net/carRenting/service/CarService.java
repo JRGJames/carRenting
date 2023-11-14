@@ -2,7 +2,6 @@ package net.carRenting.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,12 +77,6 @@ public class CarService {
         sessionService.onlyAdminsOrCustomersWithIisOwnData(carEntityFromDatabase.getCustomer().getId());
         carRepository.deleteById(id);
         return id;
-    }
-
-    public CarEntity getOneRandom() {
-        sessionService.onlyAdmins();
-        Pageable pageable = PageRequest.of((int) (Math.random() * carRepository.count()), 1);
-        return carRepository.findAll(pageable).getContent().get(0);
     }
 
     @Transactional

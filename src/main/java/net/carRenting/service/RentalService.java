@@ -97,7 +97,7 @@ public class RentalService {
             String dropoffLocation = DataGenerationHelper.getRandomDropoffLocation();
             Float cost = DataGenerationHelper.getRandomCost();
             rentalRepository
-                    .save(new RentalEntity(pickupDate, dropoffDate, pickupLocation, dropoffLocation, cost, customerService.getOneRandom(), carService.getOneRandom()));
+                    .save(new RentalEntity(pickupDate, dropoffDate, pickupLocation, dropoffLocation, cost, customerService.getOneRandom()));
         }
         return rentalRepository.count();
     }

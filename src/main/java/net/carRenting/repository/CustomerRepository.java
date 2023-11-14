@@ -15,7 +15,7 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
 
     Optional<CustomerEntity> findByUsernameAndPassword(String username, String password);
 
-    @Query(value = "SELECT u.*,count(r.id) FROM customer u, car r WHERE u.id = r.id_customer GROUP BY u.id ORDER BY COUNT(u.id) desc", nativeQuery = true)
+    @Query(value = "SELECT cust.*,count(c.id) FROM customer cust, car c WHERE cust.id = c.id_customer GROUP BY cust.id ORDER BY COUNT(cust.id) desc", nativeQuery = true)
     Page<CustomerEntity> findCustomersByCarsNumberDescFilter(Pageable pageable);
 
     @Modifying

@@ -10,10 +10,10 @@ import net.carRenting.entity.RentalEntity;
 public interface RentalRepository extends JpaRepository<RentalEntity, Long> {
     Page<RentalEntity> findByCustomerId(Long id, Pageable pageable);
 
-    @Query(value = "SELECT t.*,count(r.id) FROM rental t, car r WHERE t.id = r.id_rental GROUP BY t.id ORDER BY COUNT(r.id) desc", nativeQuery = true)
+    @Query(value = "SELECT rent.*,count(c.id) FROM rental rent, car c WHERE rent.id = c.id_rental GROUP BY rent.id ORDER BY COUNT(c.id) desc", nativeQuery = true)
     Page<RentalEntity> findRentalsByCarsNumberDesc(Pageable pageable);
 
-    @Query(value = "SELECT t.*,count(r.id) FROM rental t, car r WHERE t.id = r.id_rental and t.id_costumer=$1 GROUP BY t.id ORDER BY COUNT(r.id) desc", nativeQuery = true)
+    @Query(value = "SELECT rent.*,count(c.id) FROM rental rent, car c WHERE rent.id = c.id_rental and rent.id_costumer=$1 GROUP BY rent.id ORDER BY COUNT(c.id) desc", nativeQuery = true)
     Page<RentalEntity> findRentalsByCarsNumberDescFilterByCustomerId(Long customerId, Pageable pageable);
 
     @Modifying

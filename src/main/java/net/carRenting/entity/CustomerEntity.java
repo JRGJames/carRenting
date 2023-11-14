@@ -1,14 +1,21 @@
 package net.carRenting.entity;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -21,19 +28,21 @@ public class CustomerEntity {
 
     @NotNull
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 3, max = 255)
     private String firstName;
-    
-    @Size(max = 50)
+
+    @Size(min = 3, max = 255)
     private String lastName;
 
     @NotNull
     @NotBlank
-    @Size(max = 20)
+    @Size(min = 9)
+    @Pattern(regexp = "^[0-9]+$", message = "Number phone only have numbers.")
     private String phoneNumber;
-    
+
     @NotNull
     @NotBlank
+    @Email
     @Size(max = 100)
     private String email;
 
@@ -41,7 +50,7 @@ public class CustomerEntity {
     @NotBlank
     @Size(max = 255)
     private String address;
-    
+
     @NotNull
     @NotBlank
     @Size(max = 50)
@@ -51,7 +60,7 @@ public class CustomerEntity {
     @NotBlank
     @Size(max = 50)
     private String province;
-    
+
     @NotNull
     @NotBlank
     @Size(max = 10)
@@ -63,51 +72,39 @@ public class CustomerEntity {
     private String country;
 
     @NotNull
-    private java.sql.Date memberSince;
+    private Date memberSince;
 
     @NotNull
     @NotBlank
-    @Size(max = 50)
+    @Size(min = 6, max = 15)
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username must be alphanumeric")
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
     @NotBlank
-    @Size(max = 512)
-    private String password;
+    @Size(min = 64, max = 64)
+    @Pattern(regexp = "^[a-fA-F0-9]+$", message = "Password must be hexadecimal")
+    private String password = "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e";
 
     @NotNull
-    private Boolean role;
+    private Boolean role = false;
 
-    @ManyToOne
-    @JoinColumn(name = "id_car")
-    private CarEntity car;
+    @OneToMany(mappedBy = "customer", fetch = jakarta.persistence.FetchType.LAZY)
+    private List<RentalEntity> rentals;
 
-    @ManyToOne
-    @JoinColumn(name = "id_rental")
-    private RentalEntity rental;
+    @OneToMany(mappedBy = "customer", fetch = jakarta.persistence.FetchType.LAZY)
+    private List<CarEntity> cars;
 
     public CustomerEntity() {
-    }
-
-    // Constructor con los campos obligatorios
-    public CustomerEntity(String firstName, String lastName, String phoneNumber, String email, String address, String city, String province, String postalCode, String country, java.sql.Date memberSince, String username, String password, Boolean role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.address = address;
-        this.city = city;
-        this.province = province;
-        this.postalCode = postalCode;
-        this.country = country;
-        this.memberSince = memberSince;
-        this.username = username;
-        this.password = password;
-        this.role = role;
+        rentals = new ArrayList<>();
+        cars = new ArrayList<>();
     }
 
     // Constructor con todos los campos
-    public CustomerEntity(Long id, String firstName, String lastName, String phoneNumber, String email, String address, String city, String province, String postalCode, String country, java.sql.Date memberSince, String username, String password, Boolean role, CarEntity car, RentalEntity rental) {
+    public CustomerEntity(Long id, String firstName, String lastName, String phoneNumber, String email, String address,
+            String city, String province, String postalCode, String country, Date memberSince, String username,
+            String password, Boolean role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -122,8 +119,30 @@ public class CustomerEntity {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.car = car;
-        this.rental = rental;
+    }
+
+    // Constructor con los campos obligatorios
+    public CustomerEntity(String firstName, String lastName, String phoneNumber, String email, String address,
+            String city, String province, String postalCode, String country, Date memberSince, String username,
+            String password, Boolean role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.address = address;
+        this.city = city;
+        this.province = province;
+        this.postalCode = postalCode;
+        this.country = country;
+        this.memberSince = memberSince;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
+    public CustomerEntity(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     // Métodos getters y setters para todos los campos
@@ -208,11 +227,11 @@ public class CustomerEntity {
         this.country = country;
     }
 
-    public java.sql.Date getMemberSince() {
+    public Date getMemberSince() {
         return memberSince;
     }
 
-    public void setMemberSince(java.sql.Date memberSince) {
+    public void setMemberSince(Date memberSince) {
         this.memberSince = memberSince;
     }
 
@@ -240,19 +259,11 @@ public class CustomerEntity {
         this.role = role;
     }
 
-    public CarEntity getCar() {
-        return car;
+    public int getRentals() {
+        return rentals.size();
     }
 
-    public void setCar(CarEntity car) {
-        this.car = car;
-    }
-
-    public RentalEntity getRental() {
-        return rental;
-    }
-
-    public void setRental(RentalEntity rental) {
-        this.rental = rental;
+    public int getCars() {
+        return cars.size();
     }
 }

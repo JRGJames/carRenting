@@ -29,9 +29,6 @@ public class RentalService {
     CustomerService customerService;
 
     @Autowired
-    CarService carService;
-
-    @Autowired
     SessionService sessionService;
 
     public RentalEntity get(Long id) {

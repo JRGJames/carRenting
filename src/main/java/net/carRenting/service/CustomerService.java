@@ -1,6 +1,5 @@
 package net.carRenting.service;
 
-import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
@@ -12,27 +11,24 @@ import net.carRenting.entity.CustomerEntity;
 import net.carRenting.exception.ResourceNotFoundException;
 import net.carRenting.helper.DataGenerationHelper;
 import net.carRenting.repository.CustomerRepository;
-import net.carRenting.repository.RentalRepository;
+import java.time.LocalDateTime;
 
 @Service
 public class CustomerService {
 
     private final String carrentingPASSWORD = "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e";
 
-    String memberSinceString = "2012-04-23T00:00:00";
+    String memberSinceString = "2012-04-23";
     LocalDateTime memberSince = LocalDateTime.parse(memberSinceString);
-    
+
     @Autowired
     CustomerRepository customerRepository;
 
     @Autowired
-    RentalRepository rentalRepository;
+    HttpServletRequest httpServletRequest;
 
     @Autowired
     SessionService sessionService;
-
-    @Autowired
-    HttpServletRequest httpServletRequest;
 
     public CustomerEntity get(Long id) {
         return customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
@@ -87,6 +83,7 @@ public class CustomerService {
     }
 
     public Long populate(Integer amount) {
+        sessionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {
             String name = DataGenerationHelper.getRandomName();
             String surname = DataGenerationHelper.getRandomSurname();

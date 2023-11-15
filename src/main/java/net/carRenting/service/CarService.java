@@ -79,7 +79,6 @@ public class CarService {
         return id;
     }
 
-    @Transactional
     public Long populate(Integer amount) {
         sessionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {

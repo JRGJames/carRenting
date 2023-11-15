@@ -1,6 +1,7 @@
 package net.carRenting.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import net.carRenting.bean.CustomerBean;
@@ -10,6 +11,7 @@ import net.carRenting.exception.UnauthorizedException;
 import net.carRenting.helper.JWTHelper;
 import net.carRenting.repository.CustomerRepository;
 
+@Service
 public class SessionService {
 
     @Autowired

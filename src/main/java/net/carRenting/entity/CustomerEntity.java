@@ -1,10 +1,8 @@
 package net.carRenting.entity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
@@ -73,10 +71,6 @@ public class CustomerEntity {
     private String country;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime memberSince;
-
-    @NotNull
     @NotBlank
     @Size(min = 6, max = 15)
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username must be alphanumeric")
@@ -117,7 +111,6 @@ public class CustomerEntity {
         this.province = province;
         this.postalCode = postalCode;
         this.country = country;
-        this.memberSince = LocalDateTime.now();
         this.username = username;
         this.password = password;
         this.role = role;
@@ -125,7 +118,7 @@ public class CustomerEntity {
 
     // Constructor con los campos obligatorios
     public CustomerEntity(String firstName, String lastName, String phoneNumber, String email, String address,
-            String city, String province, String postalCode, String country, LocalDateTime memberSince, String username,
+            String city, String province, String postalCode, String country, String username,
             String password, Boolean role) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -136,7 +129,6 @@ public class CustomerEntity {
         this.province = province;
         this.postalCode = postalCode;
         this.country = country;
-        this.memberSince = memberSince;
         this.username = username;
         this.password = password;
         this.role = role;
@@ -227,14 +219,6 @@ public class CustomerEntity {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public LocalDateTime getMemberSince() {
-        return memberSince;
-    }
-
-    public void setMemberSince(LocalDateTime memberSince) {
-        this.memberSince = memberSince;
     }
 
     public String getUsername() {

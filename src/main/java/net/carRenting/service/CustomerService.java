@@ -11,15 +11,12 @@ import net.carRenting.entity.CustomerEntity;
 import net.carRenting.exception.ResourceNotFoundException;
 import net.carRenting.helper.DataGenerationHelper;
 import net.carRenting.repository.CustomerRepository;
-import java.time.LocalDateTime;
 
 @Service
 public class CustomerService {
 
     private final String carrentingPASSWORD = "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e";
 
-    String memberSinceString = "2012-04-23";
-    LocalDateTime memberSince = LocalDateTime.parse(memberSinceString);
 
     @Autowired
     CustomerRepository customerRepository;
@@ -94,10 +91,9 @@ public class CustomerService {
             String province = DataGenerationHelper.getRandomProvince();
             String postalCode = DataGenerationHelper.getRandomPostalCode();
             String country = DataGenerationHelper.getRandomCountry();
-            LocalDateTime memberSince = DataGenerationHelper.getRadomDate();
             String username = DataGenerationHelper.getRandomUsername();
             customerRepository.save(new CustomerEntity(name, surname, phoneNumber, email, address, city, province,
-                    postalCode, country, memberSince, username,
+                    postalCode, country, username,
                     "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true));
         }
         return customerRepository.count();
@@ -108,9 +104,9 @@ public class CustomerService {
         sessionService.onlyAdmins();
         customerRepository.deleteAll();
         customerRepository.resetAutoIncrement();
-        CustomerEntity customerEntity1 = new CustomerEntity("Carlos", "Sainz", "55555555", "cs@gmail.com", "C/Carlos Sainz", "Madrid", "Madrid", "43055", "Spain", memberSince, "carlossainz55", "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true );
+        CustomerEntity customerEntity1 = new CustomerEntity("Carlos", "Sainz", "55555555", "cs@gmail.com", "C/Carlos Sainz", "Madrid", "Madrid", "43055", "Spain", "carlossainz55", "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true );
         customerRepository.save(customerEntity1);
-        customerEntity1 = new CustomerEntity("Fernando", "Alonso", "333333333", "fa@gmail.com", "C/Fernando Alonso", "Asturias", "Oviedo", "43033", "Spain", memberSince , "fernandoalo_oficial", "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true );
+        customerEntity1 = new CustomerEntity("Fernando", "Alonso", "333333333", "fa@gmail.com", "C/Fernando Alonso", "Asturias", "Oviedo", "43033", "Spain", "fernandoalo_oficial", "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true );
         customerRepository.save(customerEntity1);
         return customerRepository.count();
     }

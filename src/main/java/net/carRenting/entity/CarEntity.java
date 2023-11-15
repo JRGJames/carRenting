@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -20,44 +19,35 @@ public class CarEntity {
     private Long id;
 
     @NotNull
-    @NotBlank
     @Size(max = 50)
     private String brand;
     
     @NotNull
-    @NotBlank
     @Size(max = 50)
     private String model;
 
     @NotNull
-    @NotBlank
     private Integer year;
     
     @NotNull
-    @NotBlank
     @Size(max = 20)
     private String transmission;
 
     @NotNull
-    @NotBlank
     @Size(max = 20)
     private String fuel;
     
     @NotNull
-    @NotBlank
     private Integer doors;
 
     @NotNull
-    @NotBlank
     private Integer seats;
     
     @NotNull
-    @NotBlank
     @Size(max = 20)
     private String color;
 
     @NotNull
-    @NotBlank
     private Integer hp;
 
     @NotNull
@@ -65,8 +55,8 @@ public class CarEntity {
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "id_costomer")
-    private CustomerEntity customer;
+    @JoinColumn(name = "id_user")
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "id_rental")
@@ -102,7 +92,7 @@ public class CarEntity {
         this.image = image;
     }
 
-    public CarEntity(String brand, String model, Integer year, String transmission, String fuel, Integer doors, Integer seats, String color, Integer hp, String image, CustomerEntity customer, RentalEntity rental) {
+    public CarEntity(String brand, String model, Integer year, String transmission, String fuel, Integer doors, Integer seats, String color, Integer hp, String image, UserEntity user, RentalEntity rental) {
         this.brand = brand;
         this.model = model;
         this.year = year;
@@ -113,7 +103,7 @@ public class CarEntity {
         this.color = color;
         this.hp = hp;
         this.image = image;
-        this.customer = customer;
+        this.user = user;
         this.rental = rental;
     }
 
@@ -197,12 +187,12 @@ public class CarEntity {
         this.hp = hp;
     }
 
-    public CustomerEntity getCustomer() {
-        return customer;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setCustomer(CustomerEntity customer) {
-        this.customer = customer;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public RentalEntity getRental() {

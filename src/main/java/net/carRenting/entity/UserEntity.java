@@ -12,21 +12,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "customer")
-public class CustomerEntity {
+@Table(name = "user")
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    @NotBlank
     @Size(min = 3, max = 255)
     private String firstName;
 
@@ -34,71 +32,60 @@ public class CustomerEntity {
     private String lastName;
 
     @NotNull
-    @NotBlank
     @Size(min = 9)
     @Pattern(regexp = "^[0-9]+$", message = "Number phone only have numbers.")
     private String phoneNumber;
 
     @NotNull
-    @NotBlank
     @Email
     @Size(max = 100)
     private String email;
 
     @NotNull
-    @NotBlank
     @Size(max = 255)
     private String address;
 
     @NotNull
-    @NotBlank
     @Size(max = 50)
     private String city;
 
     @NotNull
-    @NotBlank
     @Size(max = 50)
     private String province;
 
     @NotNull
-    @NotBlank
     @Size(max = 10)
     private String postalCode;
 
     @NotNull
-    @NotBlank
     @Size(max = 50)
     private String country;
 
     @NotNull
-    @NotBlank
     @Size(min = 6, max = 15)
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username must be alphanumeric")
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
-    @NotBlank
     @Size(min = 64, max = 64)
-    @Pattern(regexp = "^[a-fA-F0-9]+$", message = "Password must be hexadecimal")
     private String password = "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e";
 
     @NotNull
     private Boolean role = false;
 
-    @OneToMany(mappedBy = "customer", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
     private List<RentalEntity> rentals;
 
-    @OneToMany(mappedBy = "customer", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
     private List<CarEntity> cars;
 
-    public CustomerEntity() {
+    public UserEntity() {
         rentals = new ArrayList<>();
         cars = new ArrayList<>();
     }
 
     // Constructor con todos los campos
-    public CustomerEntity(Long id, String firstName, String lastName, String phoneNumber, String email, String address,
+    public UserEntity(Long id, String firstName, String lastName, String phoneNumber, String email, String address,
             String city, String province, String postalCode, String country, String username,
             String password, Boolean role) {
         this.id = id;
@@ -117,7 +104,7 @@ public class CustomerEntity {
     }
 
     // Constructor con los campos obligatorios
-    public CustomerEntity(String firstName, String lastName, String phoneNumber, String email, String address,
+    public UserEntity(String firstName, String lastName, String phoneNumber, String email, String address,
             String city, String province, String postalCode, String country, String username,
             String password, Boolean role) {
         this.firstName = firstName;
@@ -134,7 +121,7 @@ public class CustomerEntity {
         this.role = role;
     }
 
-    public CustomerEntity(String username, String password) {
+    public UserEntity(String username, String password) {
         this.username = username;
         this.password = password;
     }

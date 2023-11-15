@@ -8,13 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import net.carRenting.entity.RentalEntity;
 
 public interface RentalRepository extends JpaRepository<RentalEntity, Long> {
-    Page<RentalEntity> findByCustomerId(Long id, Pageable pageable);
+    Page<RentalEntity> findByUserId(Long id, Pageable pageable);
 
     @Query(value = "SELECT rent.*,count(c.id) FROM rental rent, car c WHERE rent.id = c.id_rental GROUP BY rent.id ORDER BY COUNT(c.id) desc", nativeQuery = true)
     Page<RentalEntity> findRentalsByCarsNumberDesc(Pageable pageable);
 
     @Query(value = "SELECT rent.*,count(c.id) FROM rental rent, car c WHERE rent.id = c.id_rental and rent.id_costumer=$1 GROUP BY rent.id ORDER BY COUNT(c.id) desc", nativeQuery = true)
-    Page<RentalEntity> findRentalsByCarsNumberDescFilterByCustomerId(Long customerId, Pageable pageable);
+    Page<RentalEntity> findRentalsByCarsNumberDescFilterByUserId(Long userId, Pageable pageable);
 
     @Modifying
     @Query(value = "ALTER TABLE rental AUTO_INCREMENT = 1", nativeQuery = true)

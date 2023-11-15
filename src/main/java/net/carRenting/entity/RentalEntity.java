@@ -45,8 +45,8 @@ public class RentalEntity {
     private Float cost;
 
     @ManyToOne
-    @JoinColumn(name = "id_customer", insertable = false, updatable = false)
-    private CustomerEntity customer;
+    @JoinColumn(name = "id_user", insertable = false, updatable = false)
+    private UserEntity user;
 
    @OneToMany(mappedBy = "rental", fetch = jakarta.persistence.FetchType.LAZY)
     private List<CarEntity> cars;
@@ -72,13 +72,13 @@ public class RentalEntity {
         this.cost = cost;
     }
 
-    public RentalEntity(LocalDateTime pickupDate, LocalDateTime dropoffDate, String pickupLocation, String dropoffLocation, Float cost, CustomerEntity customer) {
+    public RentalEntity(LocalDateTime pickupDate, LocalDateTime dropoffDate, String pickupLocation, String dropoffLocation, Float cost, UserEntity user) {
         this.pickupDate = pickupDate;
         this.dropoffDate = dropoffDate;
         this.pickupLocation = pickupLocation;
         this.dropoffLocation = dropoffLocation;
         this.cost = cost;
-        this.customer = customer;
+        this.user = user;
     }
 
     // Métodos getters y setters para todos los campos
@@ -131,12 +131,12 @@ public class RentalEntity {
         this.cost = cost;
     }
 
-    public CustomerEntity getCustomer() {
-        return customer;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setCustomer(CustomerEntity customer) {
-        this.customer = customer;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public int getCars() {

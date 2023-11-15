@@ -11,7 +11,7 @@ import net.carRenting.entity.CarEntity;
 import net.carRenting.exception.ResourceNotFoundException;
 import net.carRenting.helper.DataGenerationHelper;
 import net.carRenting.repository.CarRepository;
-import net.carRenting.repository.CustomerRepository;
+import net.carRenting.repository.UserRepository;
 
 @Service
 public class CarService {
@@ -20,7 +20,7 @@ public class CarService {
     CarRepository carRepository;
 
     @Autowired
-    CustomerRepository customerRepository;
+    UserRepository userRepository;
 
     @Autowired
     HttpServletRequest httpServletRequest;
@@ -29,7 +29,7 @@ public class CarService {
     RentalService rentalService;
 
     @Autowired
-    CustomerService customerService;
+    UserService userService;
 
     @Autowired
     SessionService sessionService;
@@ -38,23 +38,23 @@ public class CarService {
         return carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Car not found"));
     }
 
-    public Page<CarEntity> getPage(Pageable pageable, Long customerId, Long rentalId) {
-        if (customerId == 0) {
+    public Page<CarEntity> getPage(Pageable pageable, Long userId, Long rentalId) {
+        if (userId == 0) {
             if (rentalId == 0) {
                 return carRepository.findAll(pageable);
             } else {
                 return carRepository.findByRentalId(rentalId, pageable);
             }
         } else {
-            return carRepository.findByCustomerId(customerId, pageable);
+            return carRepository.findByUserId(userId, pageable);
         }
     }
 
     public Long create(CarEntity carEntity) {
-        sessionService.onlyAdminsOrCustomers();
+        sessionService.onlyAdminsOrUsers();
         carEntity.setId(null);
-        if (sessionService.isCustomer()) {
-            carEntity.setCustomer(sessionService.getSessionCustomer());
+        if (sessionService.isUser()) {
+            carEntity.setUser(sessionService.getSessionUser());
             return carRepository.save(carEntity).getId();
         } else {
             return carRepository.save(carEntity).getId();
@@ -63,9 +63,9 @@ public class CarService {
 
     public CarEntity update(CarEntity carEntityToUpdate) {
         CarEntity carEntityFromDatabase = this.get(carEntityToUpdate.getId());
-        sessionService.onlyAdminsOrCustomersWithIisOwnData(carEntityFromDatabase.getCustomer().getId());
-        if (sessionService.isCustomer()) {
-            carEntityToUpdate.setCustomer(sessionService.getSessionCustomer());
+        sessionService.onlyAdminsOrUsersWithIisOwnData(carEntityFromDatabase.getUser().getId());
+        if (sessionService.isUser()) {
+            carEntityToUpdate.setUser(sessionService.getSessionUser());
             return carRepository.save(carEntityToUpdate);
         } else {
             return carRepository.save(carEntityToUpdate);
@@ -74,7 +74,7 @@ public class CarService {
 
     public Long delete(Long id) {
         CarEntity carEntityFromDatabase = this.get(id);
-        sessionService.onlyAdminsOrCustomersWithIisOwnData(carEntityFromDatabase.getCustomer().getId());
+        sessionService.onlyAdminsOrUsersWithIisOwnData(carEntityFromDatabase.getUser().getId());
         carRepository.deleteById(id);
         return id;
     }
@@ -93,7 +93,7 @@ public class CarService {
             Integer hp = DataGenerationHelper.getRandomHorsePower();
             String image = DataGenerationHelper.getRandomImage();
             
-            carRepository.save(new CarEntity(brand, model, year, transmission, fuel, doors, seats, color, hp, image, customerService.getOneRandom(), rentalService.getOneRandom()));
+            carRepository.save(new CarEntity(brand, model, year, transmission, fuel, doors, seats, color, hp, image, userService.getOneRandom(), rentalService.getOneRandom()));
         }
         return carRepository.count();
     }

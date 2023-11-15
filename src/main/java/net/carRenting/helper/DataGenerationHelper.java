@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class DataGenerationHelper {
 
-    // Customer
+    // User
 
     private static final String[] names = { "Mónica", "José Antonio", "Laura", "Lucas", "Eva", "Eloy", "Jesús", "Alan",
             "Pablo", "Paula", "Raquel", "Nieves", "Elena", "Sergio", "Jaime", "Fernando", "Rafael" };

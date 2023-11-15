@@ -25,30 +25,30 @@ public class RentalApi {
     @Autowired
     RentalService rentalService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<RentalEntity> get(@PathVariable("id") Long id) {
         return ResponseEntity.ok(rentalService.get(id));
     }
 
-    @PostMapping("")
+    @PostMapping("/create")
     public ResponseEntity<Long> create(@RequestBody RentalEntity rentalEntity) {
         return ResponseEntity.ok(rentalService.create(rentalEntity));
     }
 
-    @PutMapping("")
+    @PutMapping("/update")
     public ResponseEntity<RentalEntity> update(@RequestBody RentalEntity rentalEntity) {
         return ResponseEntity.ok(rentalService.update(rentalEntity));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
         return ResponseEntity.ok(rentalService.delete(id));
     }
 
-    @GetMapping("")
+    @GetMapping("/getpage")
     public ResponseEntity<Page<RentalEntity>> getPage(Pageable pageable,
-    @RequestParam(value = "customer", defaultValue = "0", required = false) Long customerId) {
-        return ResponseEntity.ok(rentalService.getPage(pageable, customerId));
+    @RequestParam(value = "user", defaultValue = "0", required = false) Long userId) {
+        return ResponseEntity.ok(rentalService.getPage(pageable, userId));
     }
 
     @PostMapping("/populate/{amount}")
@@ -61,9 +61,9 @@ public class RentalApi {
         return ResponseEntity.ok(rentalService.empty());
     }
 
-    @GetMapping("/byCarsNumberDesc")
+    @GetMapping("getpage/byCarsNumberDesc")
     public ResponseEntity<Page<RentalEntity>> getPageByCarsNumberDesc(Pageable pageable,
-            @RequestParam(value = "customer", defaultValue = "0", required = false) Long customerId) {
-        return ResponseEntity.ok(rentalService.getPageByCarsNumberDesc(pageable, customerId));
+            @RequestParam(value = "user", defaultValue = "0", required = false) Long userId) {
+        return ResponseEntity.ok(rentalService.getPageByCarsNumberDesc(pageable, userId));
     }
 }

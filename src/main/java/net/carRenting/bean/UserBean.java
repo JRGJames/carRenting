@@ -2,7 +2,7 @@ package net.carRenting.bean;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CustomerBean {
+public class UserBean {
     
     private String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

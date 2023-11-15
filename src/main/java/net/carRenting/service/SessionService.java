@@ -4,26 +4,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import net.carRenting.bean.CustomerBean;
-import net.carRenting.entity.CustomerEntity;
+import net.carRenting.bean.UserBean;
+import net.carRenting.entity.UserEntity;
 import net.carRenting.exception.ResourceNotFoundException;
 import net.carRenting.exception.UnauthorizedException;
 import net.carRenting.helper.JWTHelper;
-import net.carRenting.repository.CustomerRepository;
+import net.carRenting.repository.UserRepository;
 
 @Service
 public class SessionService {
 
     @Autowired
-    CustomerRepository customerRepository;
+    UserRepository userRepository;
 
     @Autowired
     HttpServletRequest httpServletRequest;
 
-    public String login(CustomerBean customerBean) {
-        customerRepository.findByUsernameAndPassword(customerBean.getUsername(), customerBean.getPassword())
-                .orElseThrow(() -> new ResourceNotFoundException("Wrong Customer or password"));
-        return JWTHelper.generateJWT(customerBean.getUsername());
+    public String login(UserBean userBean) {
+        userRepository.findByUsernameAndPassword(userBean.getUsername(), userBean.getPassword())
+                .orElseThrow(() -> new ResourceNotFoundException("Wrong user or password"));
+        return JWTHelper.generateJWT(userBean.getUsername());
     }
 
     public String getSessionUsername() {        
@@ -34,9 +34,9 @@ public class SessionService {
         }
     }
 
-    public CustomerEntity getSessionCustomer() {
+    public UserEntity getSessionUser() {
         if (this.getSessionUsername() != null) {
-            return customerRepository.findByUsername(this.getSessionUsername()).orElse(null);    
+            return userRepository.findByUsername(this.getSessionUsername()).orElse(null);    
         } else {
             return null;
         }
@@ -44,7 +44,7 @@ public class SessionService {
 
     public Boolean isSessionActive() {
         if (this.getSessionUsername() != null) {
-            return customerRepository.findByUsername(this.getSessionUsername()).isPresent();
+            return userRepository.findByUsername(this.getSessionUsername()).isPresent();
         } else {
             return false;
         }
@@ -52,19 +52,19 @@ public class SessionService {
 
     public Boolean isAdmin() {
         if (this.getSessionUsername() != null) {
-            CustomerEntity customerEntityInSession = customerRepository.findByUsername(this.getSessionUsername())
-                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-            return Boolean.FALSE.equals(customerEntityInSession.getRole());
+            UserEntity userEntityInSession = userRepository.findByUsername(this.getSessionUsername())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            return Boolean.FALSE.equals(userEntityInSession.getRole());
         } else {
             return false;
         }
     }
 
-    public Boolean isCustomer() {
+    public Boolean isUser() {
         if (this.getSessionUsername() != null) {
-            CustomerEntity customerEntityInSession = customerRepository.findByUsername(this.getSessionUsername())
-                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-            return Boolean.TRUE.equals(customerEntityInSession.getRole());
+            UserEntity userEntityInSession = userRepository.findByUsername(this.getSessionUsername())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            return Boolean.TRUE.equals(userEntityInSession.getRole());
         } else {
             return false;
         }
@@ -76,40 +76,40 @@ public class SessionService {
         }
     }
 
-    public void onlyCustomers() {
-        if (!this.isCustomer()) {
-            throw new UnauthorizedException("Only customers can do this");
+    public void onlyUsers() {
+        if (!this.isUser()) {
+            throw new UnauthorizedException("Only user can do this");
         }
     }
 
-    public void onlyAdminsOrCustomers() {
+    public void onlyAdminsOrUsers() {
         if (!this.isSessionActive()) {
-            throw new UnauthorizedException("Only admins or customers can do this");
+            throw new UnauthorizedException("Only admins or user can do this");
         }
     }
 
-    public void onlyCustomersWithIisOwnData(Long id_customer) {
-        if (!this.isCustomer()) {
-            throw new UnauthorizedException("Only customers can do this");
+    public void onlyUsersWithIisOwnData(Long id_user) {
+        if (!this.isUser()) {
+            throw new UnauthorizedException("Only user can do this");
         }
-        if (!this.getSessionCustomer().getId().equals(id_customer)) {
-            throw new UnauthorizedException("Only customers can do this");
+        if (!this.getSessionUser().getId().equals(id_user)) {
+            throw new UnauthorizedException("Only user can do this");
         }
     }
 
-    public void onlyAdminsOrCustomersWithIisOwnData(Long id_custumer) {
+    public void onlyAdminsOrUsersWithIisOwnData(Long id_user) {
         if (this.isSessionActive()) {
             if (!this.isAdmin()) {
-                if (!this.isCustomer()) {
-                    throw new UnauthorizedException("Only admins or customers can do this");
+                if (!this.isUser()) {
+                    throw new UnauthorizedException("Only admins or user can do this");
                 } else {
-                    if (!this.getSessionCustomer().getId().equals(id_custumer)) {
+                    if (!this.getSessionUser().getId().equals(id_user)) {
                         throw new UnauthorizedException("Only admins or costumers with its own data can do this");
                     }
                 }
             }
         } else {
-            throw new UnauthorizedException("Only admins or customers can do this");
+            throw new UnauthorizedException("Only admins or user can do this");
         }
     }
 

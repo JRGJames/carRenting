@@ -12,7 +12,7 @@ import net.carRenting.entity.RentalEntity;
 import net.carRenting.exception.ResourceNotFoundException;
 import net.carRenting.helper.DataGenerationHelper;
 import net.carRenting.repository.RentalRepository;
-import net.carRenting.repository.CustomerRepository;
+import net.carRenting.repository.UserRepository;
 
 @Service
 public class RentalService {
@@ -23,10 +23,10 @@ public class RentalService {
     HttpServletRequest httpServletRequest;
 
     @Autowired
-    CustomerRepository customerRepository;
+    UserRepository userRepository;
 
     @Autowired
-    CustomerService customerService;
+    UserService userService;
 
     @Autowired
     SessionService sessionService;
@@ -35,28 +35,28 @@ public class RentalService {
         return rentalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
     }
 
-    public Page<RentalEntity> getPage(Pageable pageable, Long customerId) {
-        if (customerId == 0) {
+    public Page<RentalEntity> getPage(Pageable pageable, Long userId) {
+        if (userId == 0) {
             return rentalRepository.findAll(pageable);
         } else {
-            return rentalRepository.findByCustomerId(customerId, pageable);
+            return rentalRepository.findByUserId(userId, pageable);
         }
     }
 
-    public Page<RentalEntity> getPageByCarsNumberDesc(Pageable pageable, Long customerId) {
-        if (customerId == 0) {
+    public Page<RentalEntity> getPageByCarsNumberDesc(Pageable pageable, Long userId) {
+        if (userId == 0) {
             return rentalRepository.findRentalsByCarsNumberDesc(pageable);
         } else {
-            return rentalRepository.findRentalsByCarsNumberDescFilterByCustomerId(customerId, pageable);
+            return rentalRepository.findRentalsByCarsNumberDescFilterByUserId(userId, pageable);
         }
     }
 
 
     public Long create(RentalEntity rentalEntity) {
         rentalEntity.setId(null);
-        sessionService.onlyAdminsOrCustomers();
-        if (sessionService.isCustomer()) {
-            rentalEntity.setCustomer(sessionService.getSessionCustomer());
+        sessionService.onlyAdminsOrUsers();
+        if (sessionService.isUser()) {
+            rentalEntity.setUser(sessionService.getSessionUser());
             return rentalRepository.save(rentalEntity).getId();
         } else {
             return rentalRepository.save(rentalEntity).getId();
@@ -65,9 +65,9 @@ public class RentalService {
 
     public RentalEntity update(RentalEntity rentalEntityToSet) {
         RentalEntity rentalEntityFromDatabase = this.get(rentalEntityToSet.getId());
-        sessionService.onlyAdminsOrCustomersWithIisOwnData(rentalEntityFromDatabase.getCustomer().getId());
-        if (sessionService.isCustomer()) {
-            if (rentalEntityToSet.getCustomer().getId().equals(sessionService.getSessionCustomer().getId())) {
+        sessionService.onlyAdminsOrUsersWithIisOwnData(rentalEntityFromDatabase.getUser().getId());
+        if (sessionService.isUser()) {
+            if (rentalEntityToSet.getUser().getId().equals(sessionService.getSessionUser().getId())) {
                 return rentalRepository.save(rentalEntityToSet);
             } else {
                 throw new ResourceNotFoundException("Unauthorized");
@@ -79,7 +79,7 @@ public class RentalService {
 
     public Long delete(Long id) {
         RentalEntity rentalEntityFromDatabase = this.get(id);
-        sessionService.onlyAdminsOrCustomersWithIisOwnData(rentalEntityFromDatabase.getCustomer().getId());
+        sessionService.onlyAdminsOrUsersWithIisOwnData(rentalEntityFromDatabase.getUser().getId());
         rentalRepository.deleteById(id);
         return id;
     }
@@ -93,7 +93,7 @@ public class RentalService {
             String dropoffLocation = DataGenerationHelper.getRandomDropoffLocation();
             Float cost = DataGenerationHelper.getRandomCost();
             rentalRepository
-                    .save(new RentalEntity(pickupDate, dropoffDate, pickupLocation, dropoffLocation, cost, customerService.getOneRandom()));
+                    .save(new RentalEntity(pickupDate, dropoffDate, pickupLocation, dropoffLocation, cost, userService.getOneRandom()));
         }
         return rentalRepository.count();
     }

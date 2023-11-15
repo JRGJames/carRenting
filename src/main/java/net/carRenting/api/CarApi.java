@@ -25,31 +25,31 @@ public class CarApi {
     @Autowired
     CarService carService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<CarEntity> get(@PathVariable("id") Long id) {
         return ResponseEntity.ok(carService.get(id));
     }
 
-    @PostMapping("")
+    @PostMapping("/create")
     public ResponseEntity<Long> create(@RequestBody CarEntity carEntity) {
         return ResponseEntity.ok(carService.create(carEntity));
     }
 
-    @PutMapping("")
+    @PutMapping("/update")
     public ResponseEntity<CarEntity> update(@RequestBody CarEntity carEntity) {
         return ResponseEntity.ok(carService.update(carEntity));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
         return ResponseEntity.ok(carService.delete(id));
     }
 
-    @GetMapping("")
+    @GetMapping("/getpage")
     public ResponseEntity<Page<CarEntity>> getPage(Pageable pageable,
-            @RequestParam(value = "customer", defaultValue = "0", required = false) Long customerId,
+            @RequestParam(value = "user", defaultValue = "0", required = false) Long userId,
             @RequestParam(value = "rental", defaultValue = "0", required = false) Long rentalId) {
-        return ResponseEntity.ok(carService.getPage(pageable, customerId, rentalId));
+        return ResponseEntity.ok(carService.getPage(pageable, userId, rentalId));
     }
 
     @PostMapping("/populate/{amount}")

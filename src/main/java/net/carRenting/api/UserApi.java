@@ -45,7 +45,7 @@ public class UserApi {
         return ResponseEntity.ok(userService.update(userEntity));
     }
 
-    @DeleteMapping("/get/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userService.delete(id));
     }

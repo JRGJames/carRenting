@@ -94,7 +94,7 @@ public class UserService {
             String username = DataGenerationHelper.getRandomUsername();
             userRepository.save(new UserEntity(name, surname, phoneNumber, email, address, city, province,
                     postalCode, country, username,
-                    "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true));
+                    "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e", true));
         }
         return userRepository.count();
     }
@@ -104,9 +104,9 @@ public class UserService {
         sessionService.onlyAdmins();
         userRepository.deleteAll();
         userRepository.resetAutoIncrement();
-        UserEntity userEntity1 = new UserEntity("Carlos", "Sainz", "55555555", "cs@gmail.com", "C/Carlos Sainz", "Madrid", "Madrid", "43055", "Spain", "carlossainz55", "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true );
+        UserEntity userEntity1 = new UserEntity("Carlos", "Sainz", "55555555", "cs@gmail.com", "C/Carlos Sainz", "Madrid", "Madrid", "43055", "Spain", "carlossainz55", "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e", true );
         userRepository.save(userEntity1);
-        userEntity1 = new UserEntity("Fernando", "Alonso", "333333333", "fa@gmail.com", "C/Fernando Alonso", "Asturias", "Oviedo", "43033", "Spain", "fernandoalo_oficial", "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true );
+        userEntity1 = new UserEntity("Fernando", "Alonso", "333333333", "fa@gmail.com", "C/Fernando Alonso", "Asturias", "Oviedo", "43033", "Spain", "fernandoalo_oficial", "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e", true );
         userRepository.save(userEntity1);
         return userRepository.count();
     }

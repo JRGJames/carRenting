@@ -2,6 +2,7 @@ package net.carRenting.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +61,7 @@ public class CarService {
             return carRepository.save(carEntity).getId();
         }
     }
-
+    
     public CarEntity update(CarEntity carEntityToUpdate) {
         CarEntity carEntityFromDatabase = this.get(carEntityToUpdate.getId());
         sessionService.onlyAdminsOrUsersWithIisOwnData(carEntityFromDatabase.getUser().getId());
@@ -79,21 +80,20 @@ public class CarService {
         return id;
     }
 
+    public CarEntity getOneRandom() {
+        System.err.println();sessionService.onlyAdmins();
+        Pageable pageable = PageRequest.of((int) (Math.random() * carRepository.count()), 1);
+        return carRepository.findAll(pageable).getContent().get(0);
+    }
+
     public Long populate(Integer amount) {
         sessionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {
             String brand = DataGenerationHelper.getRandomCarBrand();
             String model = DataGenerationHelper.getRandomCarModel();
             Integer year = DataGenerationHelper.getRandomCarYear();
-            String transmission = DataGenerationHelper.getRandomTransmission();
-            String fuel = DataGenerationHelper.getRandomFuel();
-            Integer doors = DataGenerationHelper.getRandomDoors();
-            Integer seats = DataGenerationHelper.getRandomSeats();
-            String color = DataGenerationHelper.getRandomColor();
-            Integer hp = DataGenerationHelper.getRandomHorsePower();
-            String image = DataGenerationHelper.getRandomImage();
             
-            carRepository.save(new CarEntity(brand, model, year, transmission, fuel, doors, seats, color, hp, image, userService.getOneRandom(), rentalService.getOneRandom()));
+            carRepository.save(new CarEntity(brand, model, year, false ,userService.getOneRandom()));
         }
         return carRepository.count();
     }

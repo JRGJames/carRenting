@@ -29,6 +29,9 @@ public class RentalService {
     UserService userService;
 
     @Autowired
+    CarService carService;
+
+    @Autowired
     SessionService sessionService;
 
     public RentalEntity get(Long id) {
@@ -87,21 +90,19 @@ public class RentalService {
     public Long populate(Integer amount) {
         sessionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {
-            LocalDateTime pickupDate = DataGenerationHelper.getRandomPickupDate();
-            LocalDateTime dropoffDate = DataGenerationHelper.getRandomDropoffDate(pickupDate);
-            String pickupLocation = DataGenerationHelper.getRandomPickupLocation();
-            String dropoffLocation = DataGenerationHelper.getRandomDropoffLocation();
-            Float cost = DataGenerationHelper.getRandomCost();
+            LocalDateTime startDate = DataGenerationHelper.getRandomStartDate();
+            LocalDateTime endDate = DataGenerationHelper.getRandomEndDate(startDate);
+            Double price = DataGenerationHelper.getRandomPrice();
             rentalRepository
-                    .save(new RentalEntity(pickupDate, dropoffDate, pickupLocation, dropoffLocation, cost, userService.getOneRandom()));
+                    .save(new RentalEntity(startDate, endDate, price, userService.getOneRandom(), carService.getOneRandom()));
         }
         return rentalRepository.count();
     }
-
+    
     public RentalEntity getOneRandom() {
-        sessionService.onlyAdmins();
-        Pageable pageable = PageRequest.of((int) (Math.random() * rentalRepository.count()), 1);
-        return rentalRepository.findAll(pageable).getContent().get(0);
+        System.err.println();sessionService.onlyAdmins();
+        Pageable oPageable = PageRequest.of((int) (Math.random() * rentalRepository.count()), 1);
+        return rentalRepository.findAll(oPageable).getContent().get(0);
     }
 
     @Transactional

@@ -1,10 +1,10 @@
 package net.carRenting.entity;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,7 +13,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -26,15 +25,10 @@ public class UserEntity {
 
     @NotNull
     @Size(min = 3, max = 255)
-    private String firstName;
+    private String firstname;
 
     @Size(min = 3, max = 255)
-    private String lastName;
-
-    @NotNull
-    @Size(min = 9)
-    @Pattern(regexp = "^[0-9]+$", message = "Number phone only have numbers.")
-    private String phoneNumber;
+    private String lastname;
 
     @NotNull
     @Email
@@ -42,30 +36,9 @@ public class UserEntity {
     private String email;
 
     @NotNull
-    @Size(max = 255)
-    private String address;
-
-    @NotNull
-    @Size(max = 50)
-    private String city;
-
-    @NotNull
-    @Size(max = 50)
-    private String province;
-
-    @NotNull
-    @Size(max = 10)
-    private String postalCode;
-
-    @NotNull
-    @Size(max = 50)
-    private String country;
-
-    @NotNull
     @Size(min = 6, max = 15)
     private String username;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
     @Size(min = 64, max = 64)
     private String password = "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e";
@@ -73,7 +46,8 @@ public class UserEntity {
     @NotNull
     private Boolean role = false;
 
-    @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY, cascade = { CascadeType.PERSIST,
+            CascadeType.MERGE })
     private List<RentalEntity> rentals;
 
     @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
@@ -85,37 +59,23 @@ public class UserEntity {
     }
 
     // Constructor con todos los campos
-    public UserEntity(Long id, String firstName, String lastName, String phoneNumber, String email, String address,
-            String city, String province, String postalCode, String country, String username,
+    public UserEntity(Long id, String firstname, String lastname, String email, String username,
             String password, Boolean role) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.email = email;
-        this.address = address;
-        this.city = city;
-        this.province = province;
-        this.postalCode = postalCode;
-        this.country = country;
         this.username = username;
         this.password = password;
         this.role = role;
     }
 
     // Constructor con los campos obligatorios
-    public UserEntity(String firstName, String lastName, String phoneNumber, String email, String address,
-            String city, String province, String postalCode, String country, String username,
+    public UserEntity(String firstname, String lastname, String email, String username,
             String password, Boolean role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.email = email;
-        this.address = address;
-        this.city = city;
-        this.province = province;
-        this.postalCode = postalCode;
-        this.country = country;
         this.username = username;
         this.password = password;
         this.role = role;
@@ -136,28 +96,20 @@ public class UserEntity {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {
@@ -166,46 +118,6 @@ public class UserEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public String getUsername() {
@@ -232,11 +144,11 @@ public class UserEntity {
         this.role = role;
     }
 
-    public int getRentals() {
-        return rentals.size();
-    }
+    // public int getRentals() {
+    // return rentals.size();
+    // }
 
-    public int getCars() {
-        return cars.size();
-    }
+    // public int getCars() {
+    // return cars.size();
+    // }
 }

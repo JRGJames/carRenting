@@ -54,7 +54,7 @@ public class SessionService {
         if (this.getSessionUsername() != null) {
             UserEntity userEntityInSession = userRepository.findByUsername(this.getSessionUsername())
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-            return Boolean.FALSE.equals(userEntityInSession.getRole());
+            return Boolean.TRUE.equals(userEntityInSession.getRole());
         } else {
             return false;
         }
@@ -64,7 +64,7 @@ public class SessionService {
         if (this.getSessionUsername() != null) {
             UserEntity userEntityInSession = userRepository.findByUsername(this.getSessionUsername())
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-            return Boolean.TRUE.equals(userEntityInSession.getRole());
+            return Boolean.FALSE.equals(userEntityInSession.getRole());
         } else {
             return false;
         }

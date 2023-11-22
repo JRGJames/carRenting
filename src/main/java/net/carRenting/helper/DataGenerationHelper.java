@@ -65,7 +65,7 @@ public class DataGenerationHelper {
         return carModels[(int) (Math.random() * carModels.length)];
     }
 
-    public static int getRandomCarYear() {
+    public static Integer getRandomCarYear() {
         int currentYear = Year.now().getValue();
         return 1930 + (int) (Math.random() * (currentYear - 1930 + 1));
     }

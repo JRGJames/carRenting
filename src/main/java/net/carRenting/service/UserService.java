@@ -93,11 +93,11 @@ public class UserService {
     @Transactional
     public Long empty() {
         sessionService.onlyAdmins();
-        userRepository.deleteAll();
+        userRepository.deleteAll(); 
         userRepository.resetAutoIncrement();
         UserEntity userEntity1 = new UserEntity("Carlos", "Sainz", "cs@gmail.com", "carlossainz55", carRentingPASSWORD, true);
         userRepository.save(userEntity1);
-        userEntity1 = new UserEntity("Fernando", "Alonso", "fa@gmail.com", "fernandoalo_oficial", carRentingPASSWORD, true);
+        userEntity1 = new UserEntity("Fernando", "Alonso", "fa@gmail.com", "fernandoalo", carRentingPASSWORD, true);
         userRepository.save(userEntity1);
         return userRepository.count();
     }

@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,7 +13,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "rental")
@@ -26,59 +23,48 @@ public class RentalEntity {
     private Long id;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime pickupDate;
+    private LocalDateTime start_date;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime dropoffDate;
+    private LocalDateTime end_date;
 
     @NotNull
-    @Size(max = 50)
-    private String pickupLocation;
-
-    @NotNull
-    @Size(max = 50)
-    private String dropoffLocation;
-
-    @NotNull
-    private Float cost;
+    private Double price;
 
     @ManyToOne
-    @JoinColumn(name = "id_user", insertable = false, updatable = false)
+    @JoinColumn(name = "id_user")
     private UserEntity user;
 
-   @OneToMany(mappedBy = "rental", fetch = jakarta.persistence.FetchType.LAZY)
-    private List<CarEntity> cars;
+    @ManyToOne
+    @JoinColumn(name = "id_car")
+    private CarEntity car;
 
-    public RentalEntity() {
-        cars = new ArrayList<>();
-    }
+//    @OneToMany(mappedBy = "rental", fetch = jakarta.persistence.FetchType.LAZY)
+//     private List<CarEntity> cars;
 
-    public RentalEntity(Long id, LocalDateTime pickupDate, LocalDateTime dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
+//     public RentalEntity() {
+//         cars = new ArrayList<>();
+//     }
+
+    public RentalEntity(Long id, LocalDateTime start_date, LocalDateTime end_date, Double price) {
         this.id = id;
-        this.pickupDate = pickupDate;
-        this.dropoffDate = dropoffDate;
-        this.pickupLocation = pickupLocation;
-        this.dropoffLocation = dropoffLocation;
-        this.cost = cost;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.price = price;
     }
 
-    public RentalEntity(LocalDateTime pickupDate, LocalDateTime dropoffDate, String pickupLocation, String dropoffLocation, Float cost) {
-        this.pickupDate = pickupDate;
-        this.dropoffDate = dropoffDate;
-        this.pickupLocation = pickupLocation;
-        this.dropoffLocation = dropoffLocation;
-        this.cost = cost;
+    public RentalEntity(LocalDateTime start_date, LocalDateTime end_date, Double price) {
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.price = price;
     }
 
-    public RentalEntity(LocalDateTime pickupDate, LocalDateTime dropoffDate, String pickupLocation, String dropoffLocation, Float cost, UserEntity user) {
-        this.pickupDate = pickupDate;
-        this.dropoffDate = dropoffDate;
-        this.pickupLocation = pickupLocation;
-        this.dropoffLocation = dropoffLocation;
-        this.cost = cost;
+    public RentalEntity(LocalDateTime start_date, LocalDateTime end_date, Double price, UserEntity user, CarEntity car) {
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.price = price;
         this.user = user;
+        this.car = car;
     }
 
     // Métodos getters y setters para todos los campos
@@ -91,44 +77,29 @@ public class RentalEntity {
         this.id = id;
     }
 
-    public LocalDateTime getPickupDate() {
-        return pickupDate;
+    public LocalDateTime getStart_date() {
+        return start_date;
     }
 
-    public void setPickupDate(LocalDateTime pickupDate) {
-        this.pickupDate = pickupDate;
+    public void setStart_date(LocalDateTime start_date) {
+        this.start_date = start_date;
     }
 
-    public LocalDateTime getDropoffDate() {
-        return dropoffDate;
+    public LocalDateTime getEnd_date() {
+        return end_date;
     }
 
-    public void setDropoffDate(LocalDateTime dropoffDate) {
-        this.dropoffDate = dropoffDate;
+    public void setEnd_date(LocalDateTime end_date) {
+        this.end_date = end_date;
     }
 
-    public String getPickupLocation() {
-        return pickupLocation;
+
+    public Double getPrice() {
+        return price;
     }
 
-    public void setPickupLocation(String pickupLocation) {
-        this.pickupLocation = pickupLocation;
-    }
-
-    public String getDropoffLocation() {
-        return dropoffLocation;
-    }
-
-    public void setDropoffLocation(String dropoffLocation) {
-        this.dropoffLocation = dropoffLocation;
-    }
-
-    public Float getCost() {
-        return cost;
-    }
-
-    public void setCost(Float cost) {
-        this.cost = cost;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public UserEntity getUser() {
@@ -139,7 +110,15 @@ public class RentalEntity {
         this.user = user;
     }
 
-    public int getCars() {
-        return cars.size();
+    public CarEntity getCar() {
+        return car;
     }
+
+    public void setCar(CarEntity car) {
+        this.car = car;
+    }
+
+    // public int getCars() {
+    //     return cars.size();
+    // }
 }

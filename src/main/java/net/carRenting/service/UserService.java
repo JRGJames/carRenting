@@ -15,7 +15,7 @@ import net.carRenting.repository.UserRepository;
 @Service
 public class UserService {
 
-    private final String carrentingPASSWORD = "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e";
+    private final String carRentingPASSWORD = "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e";
 
 
     @Autowired
@@ -48,7 +48,7 @@ public class UserService {
     public Long create(UserEntity userEntity) {
         sessionService.onlyAdmins();
         userEntity.setId(null);
-        userEntity.setPassword(carrentingPASSWORD);
+        userEntity.setPassword(carRentingPASSWORD);
         return userRepository.save(userEntity).getId();
     }
 
@@ -56,13 +56,11 @@ public class UserService {
         UserEntity userEntityFromDatabase = this.get(userEntityToSet.getId());
         sessionService.onlyAdminsOrUsersWithIisOwnData(userEntityFromDatabase.getId());
         if (sessionService.isUser()) {
-            userEntityToSet.setId(null);
             userEntityToSet.setRole(userEntityFromDatabase.getRole());
-            userEntityToSet.setPassword(carrentingPASSWORD);
+            userEntityToSet.setPassword(carRentingPASSWORD);
             return userRepository.save(userEntityToSet);
         } else {
-            userEntityToSet.setId(null);
-            userEntityToSet.setPassword(carrentingPASSWORD);
+            userEntityToSet.setPassword(carRentingPASSWORD);
             return userRepository.save(userEntityToSet);
         }
     }
@@ -84,17 +82,10 @@ public class UserService {
         for (int i = 0; i < amount; i++) {
             String name = DataGenerationHelper.getRandomName();
             String surname = DataGenerationHelper.getRandomSurname();
-            String phoneNumber = DataGenerationHelper.getRandomPhoneNumber();
             String email = DataGenerationHelper.getRandomEmail();
-            String address = DataGenerationHelper.getRandomAddress();
-            String city = DataGenerationHelper.getRandomCity();
-            String province = DataGenerationHelper.getRandomProvince();
-            String postalCode = DataGenerationHelper.getRandomPostalCode();
-            String country = DataGenerationHelper.getRandomCountry();
             String username = DataGenerationHelper.getRandomUsername();
-            userRepository.save(new UserEntity(name, surname, phoneNumber, email, address, city, province,
-                    postalCode, country, username,
-                    "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e", true));
+            userRepository.save(new UserEntity(name, surname, email, username,
+                    carRentingPASSWORD, false));
         }
         return userRepository.count();
     }
@@ -104,9 +95,9 @@ public class UserService {
         sessionService.onlyAdmins();
         userRepository.deleteAll();
         userRepository.resetAutoIncrement();
-        UserEntity userEntity1 = new UserEntity("Carlos", "Sainz", "55555555", "cs@gmail.com", "C/Carlos Sainz", "Madrid", "Madrid", "43055", "Spain", "carlossainz55", "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e", true );
+        UserEntity userEntity1 = new UserEntity("Carlos", "Sainz", "cs@gmail.com", "carlossainz55", carRentingPASSWORD, true);
         userRepository.save(userEntity1);
-        userEntity1 = new UserEntity("Fernando", "Alonso", "333333333", "fa@gmail.com", "C/Fernando Alonso", "Asturias", "Oviedo", "43033", "Spain", "fernandoalo_oficial", "05c34c3e0cb0ad7a7a8912f17b270d6f30dd22b568c3920d5a68066e4e96a26e", true );
+        userEntity1 = new UserEntity("Fernando", "Alonso", "fa@gmail.com", "fernandoalo_oficial", carRentingPASSWORD, true);
         userRepository.save(userEntity1);
         return userRepository.count();
     }

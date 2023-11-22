@@ -41,13 +41,12 @@ public class CarEntity {
     @JoinColumn(name = "id_user")
     private UserEntity user;
 
-    @OneToMany(mappedBy = "car", fetch = jakarta.persistence.FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private List<RentalEntity> rentals = new ArrayList<>();
-
+    @OneToMany(mappedBy = "car", fetch = jakarta.persistence.FetchType.LAZY)
+    private List<RentalEntity> rentals;
 
     public CarEntity() {
+        rentals = new ArrayList<>();
     }
-
     
     public CarEntity(String brand, String model, Integer year, boolean available) {
         this.brand = brand;
@@ -121,14 +120,8 @@ public class CarEntity {
         this.user = user;
     }
 
-  
-
-    public List<RentalEntity> getRentals() {
-        return rentals;
-    }
-
-    public void setRentals(List<RentalEntity> rentals) {
-        this.rentals = rentals;
+    public int getRentals() {
+        return this.rentals.size();
     }
 
 }

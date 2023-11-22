@@ -46,8 +46,7 @@ public class UserEntity {
     @NotNull
     private Boolean role = false;
 
-    @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY, cascade = { CascadeType.PERSIST,
-            CascadeType.MERGE })
+    @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
     private List<RentalEntity> rentals;
 
     @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
@@ -144,11 +143,11 @@ public class UserEntity {
         this.role = role;
     }
 
-    // public int getRentals() {
-    // return rentals.size();
-    // }
+    public int getRentals() {
+        return this.rentals.size();
+    }
 
-    // public int getCars() {
-    // return cars.size();
-    // }
+    public int getCars() {
+        return this.cars.size();
+    }
 }

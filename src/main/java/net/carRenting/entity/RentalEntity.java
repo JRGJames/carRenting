@@ -39,12 +39,8 @@ public class RentalEntity {
     @JoinColumn(name = "id_car")
     private CarEntity car;
 
-//    @OneToMany(mappedBy = "rental", fetch = jakarta.persistence.FetchType.LAZY)
-//     private List<CarEntity> cars;
-
-//     public RentalEntity() {
-//         cars = new ArrayList<>();
-//     }
+    public RentalEntity() {
+    }
 
     public RentalEntity(Long id, LocalDateTime start_date, LocalDateTime end_date, Double price) {
         this.id = id;
@@ -117,8 +113,4 @@ public class RentalEntity {
     public void setCar(CarEntity car) {
         this.car = car;
     }
-
-    // public int getCars() {
-    //     return cars.size();
-    // }
 }

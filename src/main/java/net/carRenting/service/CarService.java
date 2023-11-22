@@ -44,7 +44,7 @@ public class CarService {
             if (rentalId == 0) {
                 return carRepository.findAll(pageable);
             } else {
-                return carRepository.findByRentalId(rentalId, pageable);
+                return carRepository.findByUserId(rentalId, pageable);
             }
         } else {
             return carRepository.findByUserId(userId, pageable);

@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public Page<UserEntity> getPageByCarsNumberDesc(Pageable pageable) {
-        return userRepository.findUsersByCarsNumberDescFilter(pageable);
+        return userRepository.findUsersByRentalsNumberDescFilter(pageable);
     }
 
     public Long create(UserEntity userEntity) {

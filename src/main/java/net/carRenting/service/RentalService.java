@@ -92,9 +92,8 @@ public class RentalService {
         for (int i = 0; i < amount; i++) {
             LocalDateTime startDate = DataGenerationHelper.getRandomStartDate();
             LocalDateTime endDate = DataGenerationHelper.getRandomEndDate(startDate);
-            Double price = DataGenerationHelper.getRandomPrice();
             rentalRepository
-                    .save(new RentalEntity(startDate, endDate, price, userService.getOneRandom(), carService.getOneRandom()));
+                    .save(new RentalEntity(startDate, endDate, userService.getOneRandom(), carService.getOneRandom()));
         }
         return rentalRepository.count();
     }

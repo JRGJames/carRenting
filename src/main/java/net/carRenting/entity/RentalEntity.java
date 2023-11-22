@@ -24,9 +24,6 @@ public class RentalEntity {
     @NotNull
     private LocalDateTime end_date;
 
-    @NotNull
-    private Double price;
-
     @ManyToOne
     @JoinColumn(name = "id_user")
     private UserEntity user;
@@ -38,23 +35,20 @@ public class RentalEntity {
     public RentalEntity() {
     }
 
-    public RentalEntity(Long id, LocalDateTime start_date, LocalDateTime end_date, Double price) {
+    public RentalEntity(Long id, LocalDateTime start_date, LocalDateTime end_date) {
         this.id = id;
         this.start_date = start_date;
         this.end_date = end_date;
-        this.price = price;
     }
 
-    public RentalEntity(LocalDateTime start_date, LocalDateTime end_date, Double price) {
+    public RentalEntity(LocalDateTime start_date, LocalDateTime end_date) {
         this.start_date = start_date;
         this.end_date = end_date;
-        this.price = price;
     }
 
-    public RentalEntity(LocalDateTime start_date, LocalDateTime end_date, Double price, UserEntity user, CarEntity car) {
+    public RentalEntity(LocalDateTime start_date, LocalDateTime end_date, UserEntity user, CarEntity car) {
         this.start_date = start_date;
         this.end_date = end_date;
-        this.price = price;
         this.user = user;
         this.car = car;
     }
@@ -83,15 +77,6 @@ public class RentalEntity {
 
     public void setEnd_date(LocalDateTime end_date) {
         this.end_date = end_date;
-    }
-
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
     }
 
     public UserEntity getUser() {

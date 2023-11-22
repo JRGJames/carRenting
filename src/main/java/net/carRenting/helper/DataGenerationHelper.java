@@ -84,6 +84,6 @@ public class DataGenerationHelper {
     }
 
     public static Double getRandomPrice() {
-        return 50 + (double) (Math.random() * 450); // Para un costo aleatorio entre 50 y 500
+        return 30 + (double) (Math.random() * 170); // Para un costo aleatorio entre 30 y 200
     }
 }

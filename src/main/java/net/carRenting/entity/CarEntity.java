@@ -34,7 +34,7 @@ public class CarEntity {
     private Integer year;
 
     @NotNull
-    private boolean available = false;
+    private Double price_day;
 
     @ManyToOne
     @JoinColumn(name = "id_user")
@@ -46,38 +46,29 @@ public class CarEntity {
     public CarEntity() {
         rentals = new ArrayList<>();
     }
-    
-    public CarEntity(String brand, String model, Integer year, boolean available) {
+
+    public CarEntity(String brand, String model, Integer year, Double price_day) {
         this.brand = brand;
         this.model = model;
         this.year = year;
-        this.available = available;
+        this.price_day = price_day;
     }
 
-    public CarEntity(Long id, String brand, String model, Integer year, boolean available) {
+    public CarEntity(Long id, String brand, String model, Integer year, Double price_day) {
         this.id = id;
         this.brand = brand;
         this.model = model;
         this.year = year;
-        this.available = available;
+        this.price_day = price_day;
     }
 
-    public CarEntity(String brand, String model, Integer year, boolean available, UserEntity user) {
+    public CarEntity(String brand, String model, Integer year, Double price_day, UserEntity user) {
         this.brand = brand;
         this.model = model;
         this.year = year;
-        this.available = available;
+        this.price_day = price_day;
         this.user = user;
     }
-
-    // public CarEntity(String brand, String model, Integer year, boolean available, UserEntity user, RentalEntity rental) {
-    //     this.brand = brand;
-    //     this.model = model;
-    //     this.year = year;
-    //     this.available = available;
-    //     this.user = user;
-    //     this.rental = rental;
-    // }
 
     public Long getId() {
         return id;
@@ -111,6 +102,14 @@ public class CarEntity {
         this.year = year;
     }
 
+    public Double getPrice() {
+        return price_day;
+    }
+
+    public void setPrice(Double price_day) {
+        this.price_day = price_day;
+    }
+
     public UserEntity getUser() {
         return user;
     }
@@ -124,4 +123,3 @@ public class CarEntity {
     }
 
 }
-

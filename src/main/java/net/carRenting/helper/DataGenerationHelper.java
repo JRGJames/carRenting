@@ -1,5 +1,6 @@
 package net.carRenting.helper;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.Random;
@@ -56,7 +57,6 @@ public class DataGenerationHelper {
     private static final String[] carModels = { "Camry", "Fusion", "Civic", "Malibu", "Jetta", "Altima", "Elantra",
             "X5", "E-Class", "A4" };
 
-
     public static String getRandomCarBrand() {
         return carBrands[(int) (Math.random() * carBrands.length)];
     }
@@ -65,9 +65,9 @@ public class DataGenerationHelper {
         return carModels[(int) (Math.random() * carModels.length)];
     }
 
-    public static Integer getRandomCarYear() {
-        int currentYear = Year.now().getValue();
-        return 1930 + (int) (Math.random() * (currentYear - 1930 + 1));
+    public static Integer getRandomCarYear(Integer min, Integer max) {
+        Random random = new Random();
+        return random.nextInt((max - min) + 1) + min;
     }
 
     // Rental

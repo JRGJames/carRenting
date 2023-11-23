@@ -91,7 +91,7 @@ public class CarService {
         for (int i = 0; i < amount; i++) {
             String brand = DataGenerationHelper.getRandomCarBrand();
             String model = DataGenerationHelper.getRandomCarModel();
-            Integer year = DataGenerationHelper.getRandomCarYear();
+            Integer year = DataGenerationHelper.getRandomCarYear(1930, 2023);
             Double price = DataGenerationHelper.getRandomPrice();
             
             carRepository.save(new CarEntity(brand, model, year, price, userService.getOneRandom()));

@@ -20,7 +20,9 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `car_renting`
 --
+CREATE DATABASE IF NOT EXISTS `car_renting` DEFAULT CHARACTER SET utf16 COLLATE utf16_unicode_ci;
 
+USE `car_renting`;
 -- --------------------------------------------------------
 
 --
